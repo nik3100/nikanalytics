@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nikhil Analytics | Data Analytics & Business Intelligence Services</title>
+  <meta name="description" content="Nikhil Analytics - Professional Business Intelligence, Data Analytics, and Reporting Solutions for businesses worldwide.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* ─── Design Tokens ─────────────────────────────── */
+    :root {
+      --bg: #04060a;
+      --bg2: #0b0f1a;
+      --card: rgba(255, 255, 255, 0.015);
+      --excel: #1d6f42;
+      --excel-light: #2ecc71;
+      --pbi: #f2c811;
+      --pbi-dark: #d4a017;
+      --tab: #e97627;
+      --tab-dark: #c4621a;
+      --accent: #00d4ff;
+      --green: #1bde7a;
+      --orange: #ff8c2a;
+      --purple: #9b51e0;
+      --pink: #ff3366;
+      --text: #e8eaf0;
+      --muted: #8b94a8;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); overflow-x: hidden; font-size: 16px; line-height: 1.6; }
+
+    /* ─── Canvas ────────────────────────────────────── */
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.95; }
+
+    /* ─── Ticker ────────────────────────────────────── */
+    .ticker-bar { position: fixed; top: 0; width: 100%; z-index: 1001; background: rgba(4, 6, 10, .85); border-bottom: 1px solid rgba(155, 81, 224, .2); padding: 7px 0; overflow: hidden; backdrop-filter: blur(15px); }
+    .ticker-track { display: flex; white-space: nowrap; animation: tickMove 40s linear infinite; }
+    .ticker-item { padding: 0 36px; font-size: .72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+    .ticker-icon { width: 18px; height: 18px; object-fit: contain; }
+    .t-purple { color: var(--purple); } .t-pink { color: var(--pink); } .t-blue { color: var(--accent); } .t-green { color: var(--green); } .t-orange { color: var(--orange); }
+    @keyframes tickMove { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ─── Custom Neon Scrollbar ─────────────────────── */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: rgba(11, 15, 26, 0.8); border-radius: 8px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--purple), var(--pink)); border-radius: 8px; border: 2px solid rgba(11, 15, 26, 0.8); }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--pink), var(--purple)); }
+
+    /* ─── Navbar ─────────────────────────────────────── */
+    .navbar { position: fixed; top: 35px; width: 100%; z-index: 1000; background: rgba(4, 6, 10, .75); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 255, 255, .05); padding: 14px 0; }
+    .navbar-brand { font-size: 1.25rem; font-weight: 800; color: #fff !important; letter-spacing: -0.5px; }
+    .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple); display: inline-block; margin-left: 5px; animation: dot-pulse 2s ease-in-out infinite; box-shadow: 0 0 8px var(--purple); }
+    @keyframes dot-pulse { 0%, 100% { box-shadow: 0 0 6px var(--purple); } 50% { box-shadow: 0 0 18px var(--purple), 0 0 30px var(--purple); } }
+    .nav-link { color: var(--muted) !important; font-size: .85rem; font-weight: 600; transition: color .25s; padding: 6px 12px !important; border-radius: 6px; }
+    .nav-link:hover { color: #fff !important; background: rgba(155, 81, 224, .1); }
+    .btn-hire { background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; color: #fff !important; font-weight: 700; font-size: .83rem; padding: 9px 22px; border-radius: 50px; transition: all .3s; box-shadow: 0 0 18px rgba(155, 81, 224, .35); }
+    .btn-hire:hover { transform: translateY(-2px); box-shadow: 0 0 32px rgba(155, 81, 224, .6); color: #fff !important; }
+    @media(max-width:991px) {
+      .navbar-collapse { background: rgba(4, 6, 10, 0.95); padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(155, 81, 224, 0.2); }
+    }
+    @media(max-width:576px) { .ticker-bar { display: none; } .navbar { top: 0; } }
+
+    /* ─── Sections ──────────────────────────────────── */
+    section { position: relative; z-index: 1; }
+    .sec-pad { padding: 100px 0; }
+    @media(max-width:768px) { .sec-pad { padding: 60px 0; } }
+    .sec-tag { font-size: .75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--purple); font-weight: 800; display: block; margin-bottom: 12px; }
+    .sec-title { font-size: clamp(1.8rem, 3.8vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.5px; }
+    .sec-sub { color: var(--muted); font-size: 1.05rem; line-height: 1.75; max-width: 650px; }
+    .grad-p { background: linear-gradient(135deg, var(--purple), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .grad-b { background: linear-gradient(135deg, var(--accent), #0077cc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ─── Ultra Premium Glassmorphism ───────────────────────── */
+    .glass { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); position: relative; overflow: hidden; transition: all .4s cubic-bezier(.25, .46, .45, .94); display: flex; flex-direction: column; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); }
+    .glass::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .4), transparent); opacity: 0.8; }
+    .glass:hover { transform: translateY(-8px); border-color: rgba(155, 81, 224, .6); box-shadow: 0 25px 60px rgba(155, 81, 224, .2), 0 0 40px rgba(155, 81, 224, .15); background: rgba(255, 255, 255, 0.04); z-index: 10; }
+    .glass.pink-hover:hover { border-color: rgba(255, 51, 102, .6); box-shadow: 0 25px 60px rgba(255, 51, 102, .2); }
+    .glass.blue-hover:hover { border-color: rgba(0, 212, 255, .6); box-shadow: 0 25px 60px rgba(0, 212, 255, .2); }
+    .ambient-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(155,81,224,0.1) 0%, transparent 70%); border-radius: 50%; z-index: 0; pointer-events: none; filter: blur(50px); }
+
+    /* ─── Hero ──────────────────────────────────────── */
+    #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 115px; overflow: hidden; position: relative; }
+    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(155, 81, 224, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(155, 81, 224, .04) 1px, transparent 1px); background-size: 60px 60px; z-index: 0; transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px); opacity: 0.4; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none; opacity: 0.6; }
+    .blob1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(155, 81, 224, .2) 0%, transparent 70%); top: -150px; left: -200px; animation: bFloat 12s ease-in-out infinite alternate; }
+    .blob2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(255, 51, 102, .15) 0%, transparent 70%); bottom: -100px; right: -100px; animation: bFloat 15s ease-in-out infinite alternate-reverse; }
+    .blob3 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 212, 255, .15) 0%, transparent 70%); top: 40%; left: 40%; animation: bFloat 10s ease-in-out infinite alternate; }
+    @keyframes bFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 40px) scale(1.1); } }
+
+    .hero-content { position: relative; z-index: 2; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; border: 1px solid rgba(155, 81, 224, .5); border-radius: 50px; font-size: .75rem; color: var(--purple); background: rgba(155, 81, 224, .1); font-weight: 800; letter-spacing: 1.5px; margin-bottom: 24px; text-transform: uppercase; box-shadow: 0 0 20px rgba(155, 81, 224, .2); }
+    .hero-name { font-size: clamp(2.2rem, 5.5vw, 4.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
+    .hero-role { font-size: 1.15rem; color: var(--muted); margin-bottom: 32px; line-height: 1.8; }
+    .btn-primary-p { background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; color: #fff; padding: 15px 36px; border-radius: 50px; font-weight: 700; font-size: .95rem; transition: all .3s; box-shadow: 0 0 24px rgba(155, 81, 224, .4); display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+    .btn-primary-p:hover { transform: translateY(-3px); box-shadow: 0 0 40px rgba(155, 81, 224, .7); color: #fff; }
+    .btn-outline-p { background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(155, 81, 224, .5); color: #fff; padding: 15px 36px; border-radius: 50px; font-weight: 700; font-size: .95rem; transition: all .3s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; backdrop-filter: blur(10px); }
+    .btn-outline-p:hover { background: rgba(155, 81, 224, .15); border-color: var(--pink); transform: translateY(-3px); box-shadow: 0 0 20px rgba(255, 51, 102, .3); color:#fff; }
+
+    .tool-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 12px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1); font-size: .8rem; font-weight: 700; color: var(--muted); transition: all .3s; backdrop-filter: blur(10px); }
+    .tool-badge:hover { background: rgba(255, 255, 255, .1); color: #fff; transform: translateY(-2px); border-color: rgba(155, 81, 224, .4); }
+    .tool-badge .t-ico { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tool-badge .t-ico img { width: 100%; height: 100%; object-fit: contain; }
+
+    .hero-right { position: relative; z-index: 2; }
+    .dash-wrap { background: rgba(11, 15, 26, .85); border: 1px solid rgba(155, 81, 224, .3); border-radius: 24px; padding: 26px; box-shadow: 0 0 80px rgba(155, 81, 224, .15), 0 30px 60px rgba(0, 0, 0, .6); animation: floatY 6s ease-in-out infinite; backdrop-filter: blur(25px); }
+    @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .dash-top { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .d-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .d-r { background: #ff5f57; } .d-y { background: #febc2e; } .d-g { background: #28c840; }
+    .dash-label { font-size: .7rem; color: var(--text); letter-spacing: 2px; margin-left: 10px; font-weight: 800; }
+    .kpi-g { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+    @media(max-width: 576px) { .kpi-g { grid-template-columns: repeat(2, 1fr); } }
+    .kpi-b { border-radius: 12px; padding: 14px 10px; text-align: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); }
+    .kv { font-size: 1.15rem; font-weight: 800; display: block; }
+    .kl { font-size: .62rem; color: var(--muted); font-weight: 600; }
+    .kb-p { background: rgba(155, 81, 224, .1); border: 1px solid rgba(155, 81, 224, .3); } .kb-p .kv { color: var(--purple); }
+    .kb-pink { background: rgba(255, 51, 102, .1); border: 1px solid rgba(255, 51, 102, .3); } .kb-pink .kv { color: var(--pink); }
+    .kb-b { background: rgba(0, 212, 255, .1); border: 1px solid rgba(0, 212, 255, .3); } .kb-b .kv { color: var(--accent); }
+    .kb-g { background: rgba(27, 222, 122, .1); border: 1px solid rgba(27, 222, 122, .3); } .kb-g .kv { color: var(--green); }
+    .chart-box { background: rgba(255, 255, 255, .02); border: 1px solid rgba(255, 255, 255, .06); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+    .chart-lbl { font-size: .65rem; color: var(--muted); font-weight: 800; letter-spacing: 1.5px; margin-bottom: 12px; }
+
+    /* ─── Global Reach ────────────────────────────── */
+    .trusted-sec { padding: 45px 0; border-bottom: 1px solid rgba(255, 255, 255, .05); background: rgba(6, 8, 14, .6); backdrop-filter: blur(10px); overflow: hidden; }
+    .trusted-title { text-align: center; font-size: .85rem; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px; font-weight: 800; }
+    .client-logo { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; font-size: 1.0rem; font-weight: 800; color: rgba(255, 255, 255, .8); transition: all .3s; cursor: default; }
+    .client-logo:hover { color: var(--purple); transform: translateY(-3px); }
+    .client-logo img { width: 50px; height: auto; border-radius: 4px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); transition: transform .3s; }
+    .client-logo:hover img { box-shadow: 0 8px 20px rgba(155, 81, 224, 0.4); transform: scale(1.05); }
+
+    /* ─── About ─────────────────────────────────────── */
+    #about { background: linear-gradient(to bottom, transparent, rgba(155, 81, 224, .03), transparent); }
+    .about-stat { text-align: center; padding: 24px; }
+    .about-num { font-size: 2.5rem; font-weight: 800; display: block; margin-bottom: 4px; line-height: 1; }
+    .about-lbl { color: var(--muted); font-size: .85rem; font-weight: 600; }
+
+    /* ─── Why Data Analytics ───────────────────────── */
+    #why-data { position: relative; background: rgba(0, 212, 255, 0.02); }
+    .why-card { background: rgba(11, 15, 26, 0.7); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 40px; height: 100%; transition: all .3s; backdrop-filter: blur(20px); }
+    .why-card:hover { border-color: rgba(0, 212, 255, 0.3); transform: translateY(-5px); }
+    .why-icon { width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+
+    /* ─── Services ──────────────────────────────────── */
+    .svc-card { padding: 34px 30px; flex: 1; height: 100%; }
+    .svc-icon { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 1.8rem; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
+    .svc-card h5 { font-size: 1.15rem; font-weight: 800; margin-bottom: 12px; color: #fff; }
+    .svc-card p { color: var(--muted); font-size: .9rem; line-height: 1.75; margin: 0 0 20px; flex-grow: 1; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+    .tag { font-size: .7rem; padding: 4px 12px; border-radius: 50px; font-weight: 700; letter-spacing: .5px; }
+
+    /* ─── Dashboard Gallery ─────────────────────────── */
+    #dashboards { padding: 100px 0; background: rgba(0, 212, 255, 0.015); overflow: hidden; }
+    @media(max-width:768px) { #dashboards { padding: 60px 0; } }
+    .dash-gallery-track { display: flex; gap: 30px; animation: scrollGallery 50s linear infinite; width: max-content; padding: 20px 0; will-change: transform; }
+    .dash-gallery-track:hover { animation-play-state: paused; }
+    .dash-item { width: 350px; flex-shrink: 0; transition: transform 0.3s; }
+    .dash-item:hover { transform: translateY(-10px) scale(1.02); z-index: 10; }
+    .dash-img-mock { height: 200px; background: rgba(11, 15, 26, 0.9); border-radius: 14px 14px 0 0; border: 1px solid rgba(255, 255, 255, 0.1); border-bottom: none; display: flex; flex-direction: column; padding: 15px; position: relative; overflow: hidden; }
+    .dash-info { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0 0 14px 14px; padding: 20px; backdrop-filter: blur(20px); }
+    .dash-info h6 { font-weight: 800; font-size: 1.05rem; color: #fff; margin-bottom: 8px; }
+    .dash-info p { font-size: 0.85rem; color: var(--muted); margin: 0; line-height: 1.6; }
+    @keyframes scrollGallery { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 15px)); } }
+
+    /* ─── Tools / Technologies (Upgraded with PNGs) ─── */
+    #tools { background: rgba(255, 51, 102, .015); }
+    .tool-card { padding: 34px 24px; text-align: center; flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; }
+    .tool-logo-img { width: 65px; height: 65px; object-fit: contain; margin-bottom: 20px; transition: transform .3s; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.4)); }
+    .tool-card:hover .tool-logo-img { transform: scale(1.1) translateY(-5px); }
+    .tool-desc { font-size: 0.85rem; color: var(--muted); margin-top: 15px; line-height: 1.6; flex-grow: 1; text-align: left;}
+
+    /* ─── Sectors ──────────────────────────────────── */
+    .sector-card { padding: 30px 24px; text-align: center; cursor: default; flex: 1; height: 100%; }
+    .sector-icon { font-size: 2.2rem; margin-bottom: 16px; display: block; color: var(--purple); transition: transform .3s; }
+    .sector-card:hover .sector-icon { transform: translateY(-5px); }
+    .sector-card h6 { font-weight: 800; color: #fff; font-size: 1.05rem; margin-bottom: 10px; }
+    .sector-card p { color: var(--muted); font-size: .85rem; line-height: 1.65; margin: 0; flex-grow: 1; }
+
+    /* ─── Full Width Demo Wrappers ────────────────── */
+    .demo-section-wrapper { padding: 80px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .demo-section-wrapper:last-child { border-bottom: none; }
+    .demo-container { max-width: 1500px; margin: 0 auto; padding: 0 20px; }
+    .demo-table-wrap { overflow-x: auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); max-width: 100%; max-height: 350px; }
+    
+    /* Dynamic table borders based on sector */
+    .table-ecom { border: 1px solid rgba(29, 111, 66, .5); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(29, 111, 66, 0.15); }
+    .table-mktg { border: 1px solid rgba(0, 212, 255, .5); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 212, 255, 0.15); }
+    .table-hlth { border: 1px solid rgba(255, 51, 102, .5); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 51, 102, 0.15); }
+
+    /* Scrollbar specific to table */
+    .demo-table-wrap::-webkit-scrollbar { height: 12px; }
+    .table-ecom::-webkit-scrollbar-track { background: rgba(29, 111, 66, 0.1); border-radius: 0 0 12px 12px; }
+    .table-ecom::-webkit-scrollbar-thumb { background: rgba(29, 111, 66, 0.8); border-radius: 12px; border: 2px solid #070a10; }
+    .table-mktg::-webkit-scrollbar-track { background: rgba(0, 212, 255, 0.1); border-radius: 0 0 12px 12px; }
+    .table-mktg::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.8); border-radius: 12px; border: 2px solid #070a10; }
+    .table-hlth::-webkit-scrollbar-track { background: rgba(255, 51, 102, 0.1); border-radius: 0 0 12px 12px; }
+    .table-hlth::-webkit-scrollbar-thumb { background: rgba(255, 51, 102, 0.8); border-radius: 12px; border: 2px solid #070a10; }
+
+    .demo-table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: .8rem; background: #070a10; }
+    .demo-table th { padding: 12px 16px; text-align: left; font-weight: 800; font-size: .75rem; letter-spacing: 1px; white-space: nowrap; position: sticky; top: 0; }
+    
+    .th-ecom { background: rgba(29, 111, 66, .2); color: var(--green); border-bottom: 2px solid rgba(29, 111, 66, .5); }
+    .th-mktg { background: rgba(0, 212, 255, .2); color: var(--accent); border-bottom: 2px solid rgba(0, 212, 255, .5); }
+    .th-hlth { background: rgba(255, 51, 102, .2); color: var(--pink); border-bottom: 2px solid rgba(255, 51, 102, .5); }
+
+    .demo-table td { padding: 10px 16px; border-bottom: 1px solid rgba(255, 255, 255, .05); color: var(--text); font-size: .8rem; white-space: nowrap; border-right: 1px solid rgba(255, 255, 255, .02); }
+    .demo-table tr:hover td { background: rgba(255, 255, 255, .04); color: #fff; }
+    .cell-up { color: var(--green); font-weight: 800; } .cell-down { color: #ff6b6b; font-weight: 800; } .cell-bold { color: #fff; font-weight: 700; }
+
+    .transform-arrow { display: flex; align-items: center; justify-content: center; font-size: 3rem; animation: arrowAnim 1.5s ease-in-out infinite; margin: 30px 0; }
+    .arrow-ecom { color: var(--purple); text-shadow: 0 0 20px rgba(155, 81, 224, 0.6); }
+    .arrow-mktg { color: var(--accent); text-shadow: 0 0 20px rgba(0, 212, 255, 0.6); }
+    .arrow-hlth { color: var(--pink); text-shadow: 0 0 20px rgba(255, 51, 102, 0.6); }
+
+    @keyframes arrowAnim { 0%, 100% { opacity: .5; transform: translateY(0); } 50% { opacity: 1; transform: translateY(15px); } }
+
+    .full-dashboard { background: rgba(11, 15, 26, .85); border-radius: 16px; padding: 25px; backdrop-filter: blur(30px); width: 100%; overflow: hidden; }
+    .dash-ecom { border: 1px solid rgba(155, 81, 224, .4); box-shadow: 0 0 60px rgba(155, 81, 224, .15), 0 20px 40px rgba(0, 0, 0, .5); }
+    .dash-mktg { border: 1px solid rgba(0, 212, 255, .4); box-shadow: 0 0 60px rgba(0, 212, 255, .15), 0 20px 40px rgba(0, 0, 0, .5); }
+    .dash-hlth { border: 1px solid rgba(255, 51, 102, .4); box-shadow: 0 0 60px rgba(255, 51, 102, .15), 0 20px 40px rgba(0, 0, 0, .5); }
+
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 15px; flex-wrap: wrap; gap: 15px; }
+    .dash-title { font-size: 1.3rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .dash-filters { display: flex; gap: 10px; flex-wrap: wrap; }
+    .dash-filter { padding: 6px 16px; background: rgba(255, 255, 255, 0.05); border-radius: 6px; font-size: 0.75rem; color: var(--muted); cursor: pointer; border: 1px solid transparent; font-weight: 700; transition: all .3s; }
+    .dash-filter.active-ecom { background: rgba(155, 81, 224, 0.15); border-color: rgba(155, 81, 224, 0.4); color: var(--purple); }
+    .dash-filter.active-mktg { background: rgba(0, 212, 255, 0.15); border-color: rgba(0, 212, 255, 0.4); color: var(--accent); }
+    .dash-filter.active-hlth { background: rgba(255, 51, 102, 0.15); border-color: rgba(255, 51, 102, 0.4); color: var(--pink); }
+
+    /* ─── Testimonials Sliding Gallery ──────────────── */
+    #testimonials { overflow: hidden; }
+    .test-gallery-track { display: flex; gap: 30px; animation: scrollTest 40s linear infinite; width: max-content; padding: 20px 0; will-change: transform; }
+    .test-gallery-track:hover { animation-play-state: paused; }
+    .tcard { width: 450px; flex-shrink: 0; padding: 35px 30px; transition: transform 0.3s; }
+    .tcard:hover { transform: translateY(-5px); }
+    @media(max-width: 576px) { .tcard { width: 320px; } }
+    .stars { color: #ffc107; font-size: .9rem; letter-spacing: 3px; margin-bottom: 18px; }
+    .ttext { color: var(--text); font-size: .95rem; line-height: 1.8; font-style: italic; margin-bottom: 28px; flex-grow: 1; font-weight: 500; }
+    @keyframes scrollTest { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 15px)); } }
+
+    /* ─── Contact ───────────────────────────────────── */
+    #contact { position: relative; overflow: hidden; padding: 120px 0; }
+    @media(max-width:768px) { #contact { padding: 80px 0; } }
+    .contact-bg-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(155, 81, 224, 0.15) 0%, transparent 60%); z-index: 0; pointer-events: none; }
+    .contact-card { padding: 60px 50px; border-radius: 30px; text-align: center; border-color: rgba(155, 81, 224, .4); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(155, 81, 224, 0.15); background: rgba(255, 255, 255, 0.02); }
+    @media(max-width:576px) { .contact-card { padding: 40px 20px; } }
+    .btn-wa { background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; padding: 16px 32px; border-radius: 50px; font-weight: 800; font-size: .95rem; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; transition: all .3s; box-shadow: 0 0 20px rgba(37, 211, 102, .3); }
+    .btn-wa:hover { transform: translateY(-3px); box-shadow: 0 0 35px rgba(37, 211, 102, .6); color: #fff; }
+    .btn-em { background: linear-gradient(135deg, var(--accent), #0077cc); color: #fff; padding: 16px 32px; border-radius: 50px; font-weight: 800; font-size: .95rem; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; transition: all .3s; box-shadow: 0 0 20px rgba(0, 212, 255, .3); }
+    .btn-li { background: linear-gradient(135deg, #0077b5, #005582); color: #fff; padding: 16px 32px; border-radius: 50px; font-weight: 800; font-size: .95rem; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; transition: all .3s; box-shadow: 0 0 20px rgba(0, 119, 181, .3); }
+    .btn-li:hover { transform: translateY(-3px); box-shadow: 0 0 35px rgba(0, 119, 181, .6); color: #fff; }
+
+    /* ─── Footer ─────────────────────────────────────── */
+    footer { background: rgba(0, 0, 0, .8); border-top: 1px solid rgba(155, 81, 224, .2); padding: 60px 0 30px; position: relative; z-index: 2; }
+    .footer-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; text-decoration: none; transition: all 0.3s; }
+    .footer-icon:hover { background: var(--purple); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(155,81,224,0.4); color: #fff; }
+    .footer-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.8; margin-top: 15px; max-width: 400px; }
+
+    /* ─── Vastly Expanded Scroll Reveal & Animations ─────────────────────────────── */
+    .anim-el { opacity: 0; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .anim-el.on { opacity: 1; }
+    .fade-up { transform: translateY(50px); } .fade-up.on { transform: translateY(0); }
+    .slide-left { transform: translateX(-50px); } .slide-left.on { transform: translateX(0); }
+    .slide-right { transform: translateX(50px); } .slide-right.on { transform: translateX(0); }
+    .zoom-in { transform: scale(0.85); } .zoom-in.on { transform: scale(1); }
+    .flip-up { transform: perspective(600px) rotateX(-20deg); } .flip-up.on { transform: perspective(600px) rotateX(0); }
+
+    .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; } .d3 { transition-delay: .3s; }
+    .d4 { transition-delay: .4s; } .d5 { transition-delay: .5s; } .d6 { transition-delay: .6s; }
+
+    /* ─── Availability ──────────────────────────────── */
+    #scrollUp { position: fixed; bottom: 30px; left: 30px; z-index: 999; width: 48px; height: 48px; background: rgba(155, 81, 224, .15); border: 1px solid rgba(155, 81, 224, .5); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--purple); font-size: 1.1rem; text-decoration: none; transition: all .3s; opacity: 0; pointer-events: none; backdrop-filter: blur(10px); }
+    #scrollUp.show { opacity: 1; pointer-events: all; }
+    
+    /* ─── Process Timeline ───────────────────────────── */
+    #process { position: relative; background: rgba(155, 81, 224, 0.02); }
+    .timeline { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
+    .timeline::after { content: ''; position: absolute; width: 4px; background: rgba(255, 255, 255, 0.05); top: 0; bottom: 0; left: 50%; margin-left: -2px; border-radius: 10px; }
+    .tl-item { padding: 10px 40px; position: relative; background: inherit; width: 50%; }
+    .tl-left { left: 0; } .tl-right { left: 50%; }
+    .tl-item::after { content: ''; position: absolute; width: 20px; height: 20px; right: -10px; background: var(--bg); border: 4px solid var(--purple); top: 15px; border-radius: 50%; z-index: 1; box-shadow: 0 0 10px var(--purple); }
+    .tl-right::after { left: -10px; }
+    .tl-content { padding: 30px; border-radius: 20px; position: relative; border-color: rgba(155, 81, 224, 0.2); transition: all 0.3s; }
+    .tl-content:hover { border-color: var(--purple); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(155, 81, 224, 0.15); }
+    .tl-num { position: absolute; top: -15px; left: 20px; background: linear-gradient(135deg, var(--purple), var(--pink)); color: #fff; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 800; font-size: 0.9rem; }
+    .tl-content h5 { color: #fff; font-weight: 800; margin-bottom: 10px; margin-top: 5px; }
+    .tl-content p { color: var(--muted); font-size: 0.9rem; margin: 0; line-height: 1.6; }
+    @media screen and (max-width: 768px) {
+      .timeline::after { left: 31px; }
+      .tl-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+      .tl-right { left: 0%; }
+      .tl-item::after { left: 21px; }
+    }
+
+    /* ─── FAQ Accordion ─────────────────────────────── */
+    #faq { position: relative; }
+    .faq-wrapper { max-width: 800px; margin: 0 auto; }
+    .faq-item { margin-bottom: 15px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); background: rgba(255, 255, 255, 0.02); transition: all 0.3s; }
+    .faq-item:hover { border-color: rgba(0, 212, 255, 0.3); }
+    .faq-q { padding: 20px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: transparent; border: none; width: 100%; text-align: left; color: #fff; font-weight: 700; font-size: 1.05rem; }
+    .faq-q i { color: var(--accent); transition: transform 0.3s; }
+    .faq-a { padding: 0 25px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out; color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+    .faq-item.active .faq-q i { transform: rotate(180deg); color: var(--pink); }
+    .faq-item.active .faq-a { padding: 0 25px 20px 25px; max-height: 500px; }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Ticker -->
+  <div class="ticker-bar">
+    <div class="ticker-track" id="ticker">
+      <!-- Reliable CDN Icons for Ticker -->
+      <span class="ticker-item t-purple"><img src="https://img.icons8.com/color/96/000000/data-configuration.png" class="ticker-icon"> DATA ANALYTICS SERVICES</span>
+      <span class="ticker-item t-pink"><img src="https://img.icons8.com/color/96/000000/power-bi.png" class="ticker-icon"> POWER BI DASHBOARDS</span>
+      <span class="ticker-item t-blue"><img src="https://img.icons8.com/color/96/000000/ms-excel.png" class="ticker-icon"> EXCEL AUTOMATION</span>
+      <span class="ticker-item t-green"><img src="https://img.icons8.com/color/96/000000/tableau-software.png" class="ticker-icon"> BUSINESS INTELLIGENCE</span>
+      <span class="ticker-item t-orange"><img src="https://img.icons8.com/color/96/000000/amazon-web-services.png" class="ticker-icon"> CLOUD DATA WAREHOUSING</span>
+      <span class="ticker-item t-purple"><img src="https://img.icons8.com/color/96/000000/python.png" class="ticker-icon"> PREDICTIVE ANALYTICS</span>
+      <span class="ticker-item t-pink"><img src="https://img.icons8.com/color/96/000000/sql.png" class="ticker-icon"> KPI SCORECARDS</span>
+      
+      <!-- Duplicate for infinite scroll -->
+      <span class="ticker-item t-purple"><img src="https://img.icons8.com/color/96/000000/data-configuration.png" class="ticker-icon"> DATA ANALYTICS SERVICES</span>
+      <span class="ticker-item t-pink"><img src="https://img.icons8.com/color/96/000000/power-bi.png" class="ticker-icon"> POWER BI DASHBOARDS</span>
+      <span class="ticker-item t-blue"><img src="https://img.icons8.com/color/96/000000/ms-excel.png" class="ticker-icon"> EXCEL AUTOMATION</span>
+      <span class="ticker-item t-green"><img src="https://img.icons8.com/color/96/000000/tableau-software.png" class="ticker-icon"> BUSINESS INTELLIGENCE</span>
+      <span class="ticker-item t-orange"><img src="https://img.icons8.com/color/96/000000/amazon-web-services.png" class="ticker-icon"> CLOUD DATA WAREHOUSING</span>
+      <span class="ticker-item t-purple"><img src="https://img.icons8.com/color/96/000000/python.png" class="ticker-icon"> PREDICTIVE ANALYTICS</span>
+      <span class="ticker-item t-pink"><img src="https://img.icons8.com/color/96/000000/sql.png" class="ticker-icon"> KPI SCORECARDS</span>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Nik<span style="color:var(--purple); font-weight: 500;">Analytics</span><span class="brand-dot"></span></a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <i class="fas fa-bars" style="color:var(--purple);font-size:1.3rem;"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto gap-2 align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#why-data">Why Data?</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#tools">Technologies</a></li>
+          <li class="nav-item"><a class="nav-link" href="#dashboards">Dashboards</a></li>
+          <li class="nav-item"><a class="nav-link" href="#sectors">Industries</a></li>
+          <li class="nav-item"><a class="nav-link" href="#showcases">Data Showcases</a></li>
+          <li class="nav-item ms-lg-3"><a class="btn-hire nav-link" href="#contact">Hire Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════════ -->
+  <section id="hero">
+    <div class="hero-grid"></div>
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6 hero-content anim-el slide-left">
+          <div class="hero-badge">
+            <span class="brand-dot" style="position:static; animation:none; box-shadow:none;"></span>
+            Premium Data Analytics Solutions
+          </div>
+          <h1 class="hero-name">
+            Hi, I'm <span class="grad-p">Nikhil</span><br>
+            Data Analyst &amp;<br><span class="grad-b">BI Architect</span>
+          </h1>
+          <p class="hero-role">
+            <strong style="color:#fff;">Power BI · Tableau · Excel · SQL · Python · Cloud</strong><br>
+            I engineer <strong style="color:var(--purple);">automated data pipelines</strong> and <strong style="color:var(--pink);">boardroom-ready dashboards</strong> that transform messy spreadsheets into highly profitable business intelligence. Stop guessing, start scaling with real-time data clarity.
+          </p>
+
+          <div class="d-flex flex-wrap gap-4 mb-4" style="font-size:.9rem;color:var(--muted); font-weight: 600;">
+            <a href="mailto:muliyasiyanikhil2000@gmail.com" style="color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;"><i class="fas fa-envelope" style="color:var(--purple); font-size: 1.1rem;"></i> muliyasiyanikhil2000@gmail.com</a>
+            <a href="tel:+918155938672" style="color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone" style="color:var(--pink); font-size: 1.1rem;"></i> +91 81559 38672</a>
+            <a href="https://linkedin.com/in/nikhil-muliyasiya" target="_blank" style="color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;"><i class="fab fa-linkedin" style="color:#0077b5; font-size: 1.1rem;"></i> LinkedIn Profile</a>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3 mb-5">
+            <a href="#contact" class="btn-primary-p"><i class="fas fa-rocket"></i> Start Your Project</a>
+            <a href="#showcases" class="btn-outline-p"><i class="fas fa-chart-line"></i> View Live Dashboards</a>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3">
+            <div class="tool-badge"><div class="t-ico"><img src="https://img.icons8.com/color/96/000000/ms-excel.png"></div>Excel</div>
+            <div class="tool-badge"><div class="t-ico"><img src="https://img.icons8.com/color/96/000000/power-bi.png"></div>Power BI</div>
+            <div class="tool-badge"><div class="t-ico"><img src="https://img.icons8.com/color/96/000000/tableau-software.png"></div>Tableau</div>
+            <div class="tool-badge"><div class="t-ico"><img src="https://img.icons8.com/color/96/000000/sql.png"></div>Database</div>
+          </div>
+        </div>
+
+        <!-- Hero Dashboard with realistic SaaS metrics -->
+        <div class="col-lg-6 hero-right anim-el zoom-in d2">
+          <div class="dash-wrap glass" style="background: rgba(11,15,26,0.65);">
+            <div class="dash-top">
+              <div class="d-dot d-r"></div><div class="d-dot d-y"></div><div class="d-dot d-g"></div>
+              <span class="dash-label">BUSINESS EXECUTIVE KPI DASHBOARD</span>
+            </div>
+            <div class="kpi-g">
+              <div class="kpi-b kb-p"><span class="kv">$128.4K</span><span class="kl">Revenue +15%</span></div>
+              <div class="kpi-b kb-pink"><span class="kv">1.2%</span><span class="kl">Churn Rate</span></div>
+              <div class="kpi-b kb-b"><span class="kv">114%</span><span class="kl">Net Retention</span></div>
+              <div class="kpi-b kb-g"><span class="kv">$450</span><span class="kl">Customer ACQ</span></div>
+            </div>
+            
+            <div class="row g-2 mb-2">
+              <div class="col-12 col-md-8">
+                <div class="chart-box h-100 mb-0">
+                  <div class="chart-lbl">REVENUE GROWTH TREND</div>
+                  <svg viewBox="0 0 300 80" style="width:100%;" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="area1" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#9b51e0" stop-opacity=".4" />
+                        <stop offset="100%" stop-color="#9b51e0" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M0,70 L33,55 L66,40 L100,47 L133,30 L166,20 L200,27 L233,12 L266,15 L300,5 L300,80 L0,80Z" fill="url(#area1)"/>
+                    <path d="M0,70 L33,55 L66,40 L100,47 L133,30 L166,20 L200,27 L233,12 L266,15 L300,5" fill="none" stroke="#9b51e0" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="300" cy="5" r="5" fill="#ff3366"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="col-12 col-md-4">
+                <div class="chart-box h-100 mb-0 d-flex flex-column justify-content-center align-items-center">
+                  <div class="chart-lbl text-center">YOY LTV</div>
+                  <div style="font-size: 1.8rem; font-weight: 800; color: var(--green);">+$12K</div>
+                  <svg viewBox="0 0 100 30" style="width:100%; margin-top:10px;">
+                    <path d="M0,25 L20,15 L40,20 L60,10 L80,12 L100,2" fill="none" stroke="#1bde7a" stroke-width="3" stroke-linecap="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2">
+              <div class="col-12 col-md-6">
+                <div class="chart-box mb-0 h-100 d-flex flex-column justify-content-center">
+                  <div class="chart-lbl">REVENUE BY PLAN</div>
+                  <svg viewBox="0 0 80 80" width="80" height="80" style="display:block;margin:auto;">
+                    <circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="14"/>
+                    <circle cx="40" cy="40" r="28" fill="none" stroke="#9b51e0" stroke-width="14" stroke-dasharray="70 106" stroke-dashoffset="0" transform="rotate(-90 40 40)"/>
+                    <circle cx="40" cy="40" r="28" fill="none" stroke="#ff3366" stroke-width="14" stroke-dasharray="38 138" stroke-dashoffset="-70" transform="rotate(-90 40 40)"/>
+                    <circle cx="40" cy="40" r="28" fill="none" stroke="#00d4ff" stroke-width="14" stroke-dasharray="22 154" stroke-dashoffset="-108" transform="rotate(-90 40 40)"/>
+                    <text x="50%" y="50%" text-anchor="middle" dy=".35em" fill="#fff" style="font-size:10px;font-weight:800;">PRO</text>
+                  </svg>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="chart-box mb-0 h-100">
+                  <div class="chart-lbl">USER ACQUISITION</div>
+                  <div style="margin-top:8px;">
+                    <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text);margin-bottom:4px;font-weight:600;"><span>Organic Search</span><span style="color:var(--purple);">68%</span></div><div style="height:6px;background:rgba(255,255,255,.07);border-radius:50px;overflow:hidden;"><div class="prof-fill pf-p" style="width:68%; background:var(--purple);"></div></div></div>
+                    <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text);margin-bottom:4px;font-weight:600;"><span>Paid Ads</span><span style="color:var(--pink);">22%</span></div><div style="height:6px;background:rgba(255,255,255,.07);border-radius:50px;overflow:hidden;"><div class="prof-fill" style="background:var(--pink);width:22%"></div></div></div>
+                    <div><div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text);margin-bottom:4px;font-weight:600;"><span>Referrals</span><span style="color:var(--accent);">10%</span></div><div style="height:6px;background:rgba(255,255,255,.07);border-radius:50px;overflow:hidden;"><div class="prof-fill" style="background:var(--accent);width:10%"></div></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ GLOBAL REACH ════════════════════ -->
+  <section class="trusted-sec">
+    <div class="container anim-el fade-up">
+      <div class="trusted-title">Providing Analytics to Clients Worldwide</div>
+      <div class="row justify-content-center align-items-center g-4 text-center">
+        <div class="col-4 col-md-3 col-lg-1">
+          <div class="client-logo"><img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" alt="USA"><span>USA</span></div>
+        </div>
+        <div class="col-4 col-md-3 col-lg-1">
+          <div class="client-logo"><img src="https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg" alt="UK"><span>UK</span></div>
+        </div>
+        <div class="col-4 col-md-3 col-lg-1">
+          <div class="client-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Flag_of_Australia.svg" alt="Australia"><span>Australia</span></div>
+        </div>
+        <div class="col-4 col-md-3 col-lg-1">
+          <div class="client-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" alt="Canada"><span>Canada</span></div>
+        </div>
+        <div class="col-4 col-md-3 col-lg-1">
+          <div class="client-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_United_Arab_Emirates.svg" alt="UAE"><span>UAE</span></div>
+        </div>
+        <div class="col-4 col-md-3 col-lg-1">
+          <div class="client-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg" alt="Europe"><span>Europe</span></div>
+        </div>
+        <div class="col-4 col-md-3 col-lg-1">
+          <div class="client-logo"><img src="https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg" alt="Germany"><span>Germany</span></div>
+        </div>
+        <div class="col-4 col-md-3 col-lg-1">
+          <div class="client-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Flag_of_Singapore.svg" alt="Singapore"><span>Singapore</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ ABOUT ════════════════════════ -->
+  <section id="about" class="sec-pad">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-6 anim-el slide-left">
+          <span class="sec-tag">About My Expertise</span>
+          <h2 class="sec-title">Data Analyst &amp; <span class="grad-p">BI Expert</span></h2>
+          <p style="color:var(--muted);font-size:1.05rem;line-height:1.8;margin-bottom:24px;">
+            I'm <strong style="color:#fff;">Nikhil</strong>, a highly analytical data professional. I specialize in transforming fragmented, chaotic data into <strong style="color:var(--purple);">streamlined Business Intelligence architecture</strong>.
+          </p>
+          <p style="color:var(--muted);font-size:1.05rem;line-height:1.8;margin-bottom:24px;">
+            With over <strong style="color:#fff;">3+ years of professional experience</strong> spanning global markets, I have built highly complex Power BI and Tableau dashboards for businesses of all sizes. My analytical solutions typically reduce manual reporting time by <strong style="color:var(--pink);">over 50%</strong>, allowing businesses to pivot from data gathering to strategic action.
+          </p>
+          <p style="color:var(--muted);font-size:1.05rem;line-height:1.8;margin-bottom:32px;">
+            My background in Software Engineering gives me a unique advantage. Unlike purely functional analysts, I build robust, scalable, and optimized data pipelines that can handle massive datasets flawlessly without breaking production environments. I ensure absolute data integrity from the raw server logs all the way to the executive scorecard.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <span class="tag tag-p" style="padding: 8px 16px; font-size: 0.8rem;"><i class="fas fa-graduation-cap me-2"></i>B.E. Information Technology</span>
+            <span class="tag tag-pink" style="padding: 8px 16px; font-size: 0.8rem;"><i class="fas fa-chart-area me-2"></i>BI Architecture</span>
+            <span class="tag tag-b" style="padding: 8px 16px; font-size: 0.8rem;"><i class="fas fa-code me-2"></i>Software Engineering</span>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="row g-4">
+            <div class="col-6 anim-el flip-up d1">
+              <div class="glass p-4 text-center h-100 justify-content-center">
+                <span class="about-num grad-p">3+</span>
+                <span class="about-lbl">Years Experience</span>
+              </div>
+            </div>
+            <div class="col-6 anim-el flip-up d2">
+              <div class="glass p-4 text-center h-100 justify-content-center">
+                <span class="about-num grad-b" style="color:var(--pink);">50+</span>
+                <span class="about-lbl">Dashboards Deployed</span>
+              </div>
+            </div>
+            <div class="col-6 anim-el flip-up d3">
+              <div class="glass p-4 text-center h-100 justify-content-center">
+                <span class="about-num grad-b">50%</span>
+                <span class="about-lbl">Reporting Time Saved</span>
+              </div>
+            </div>
+            <div class="col-6 anim-el flip-up d4">
+              <div class="glass p-4 text-center h-100 justify-content-center">
+                <span class="about-num" style="color:var(--green);">100%</span>
+                <span class="about-lbl">Analytical Precision</span>
+              </div>
+            </div>
+            <div class="col-12 anim-el fade-up d5">
+              <div class="glass p-5">
+                <div style="font-size:.85rem;color:var(--purple);font-weight:800;letter-spacing:2px;margin-bottom:15px;">CORE COMPETENCIES</div>
+                <div style="font-weight:800;color:#fff;font-size:1.2rem;margin-bottom:15px;">Data Analytics | Business Intelligence | ETL</div>
+                <p style="color:var(--muted);font-size:.95rem;margin-bottom:20px; line-height: 1.7;">
+                  Expert in connecting scattered data sources, modeling complex relationships, writing advanced SQL/DAX queries, and designing pixel-perfect executive scorecards.
+                </p>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                  <span class="tag tag-p">Power BI DAX</span>
+                  <span class="tag tag-pink">Tableau LOD</span>
+                  <span class="tag tag-b">Advanced SQL</span>
+                  <span class="tag tag-y">Excel VBA</span>
+                  <span class="tag tag-p">Python Pandas</span>
+                  <span class="tag tag-green" style="border:1px solid rgba(27,222,122,.4);color:var(--green);background:rgba(27,222,122,.1)">Cloud Data</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ WHY DATA ANALYTICS ═══════════════════ -->
+  <section id="why-data" class="sec-pad">
+    <div class="container">
+      <div class="text-center mb-5 anim-el fade-up">
+        <span class="sec-tag">The Value of Data</span>
+        <h2 class="sec-title">Why Business Intelligence is <span class="grad-pink">Critical</span></h2>
+        <p class="sec-sub mx-auto">Stop guessing. Start growing. Data-driven decisions are the difference between companies that stagnate and those that scale.</p>
+      </div>
+      
+      <div class="row g-4 align-items-stretch">
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d1">
+          <div class="why-card">
+            <div class="why-icon" style="color: var(--accent); background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3);">
+              <i class="fas fa-eye"></i>
+            </div>
+            <h5 style="color: #fff; font-weight: 800; margin-bottom: 15px;">Total Visibility</h5>
+            <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.6;">Gain immediate clarity on exactly what is happening in your business. No more blind spots. Track every dollar, user, and operational metric in real-time.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d2">
+          <div class="why-card">
+            <div class="why-icon" style="color: var(--pink); background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.3);">
+              <i class="fas fa-bullseye"></i>
+            </div>
+            <h5 style="color: #fff; font-weight: 800; margin-bottom: 15px;">Data-Driven Decisions</h5>
+            <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.6;">Remove emotions and gut feelings from the boardroom. Make confident, strategic decisions backed entirely by empirical data and statistical trends.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d3">
+          <div class="why-card">
+            <div class="why-icon" style="color: var(--green); background: rgba(27, 222, 122, 0.1); border: 1px solid rgba(27, 222, 122, 0.3);">
+              <i class="fas fa-arrow-trend-up"></i>
+            </div>
+            <h5 style="color: #fff; font-weight: 800; margin-bottom: 15px;">Revenue Optimization</h5>
+            <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.6;">Identify exactly which products are profitable, where clients are churning, and how to reduce customer acquisition costs to rapidly scale your revenue.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ SERVICES ═════════════════════ -->
+  <section id="services" class="sec-pad" style="position: relative;">
+    <div class="ambient-glow" style="top: 20%; right: 10%;"></div>
+    <div class="container">
+      <div class="text-center mb-5 anim-el fade-up">
+        <span class="sec-tag">My Analytics Services</span>
+        <h2 class="sec-title">Solutions That <span class="grad-p">Drive Results</span></h2>
+        <p class="sec-sub mx-auto">I build full-stack data solutions, taking your company from messy spreadsheets to fully automated, boardroom-ready intelligence.</p>
+      </div>
+      <div class="row g-4 align-items-stretch">
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d1">
+          <div class="glass svc-card">
+            <div class="svc-icon svc-excel"><i class="fas fa-table-cells"></i></div>
+            <h5>Excel Analytics &amp; Automation</h5>
+            <p>Advanced Excel solutions utilizing Power Query, VBA macros, and dynamic pivot tables to eliminate hours of manual data entry.</p>
+            <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
+              <li><strong style="color:#fff;">Impact:</strong> Save 20+ hours/week</li>
+              <li><strong style="color:#fff;">Outcome:</strong> 100% error-free financial models</li>
+            </ul>
+            <div class="tag-row"><span class="tag tag-g">Power Query</span><span class="tag tag-g">VBA Macros</span><span class="tag tag-g">Pivot Tables</span></div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d2">
+          <div class="glass svc-card pink-hover">
+            <div class="svc-icon svc-pbi"><i class="fas fa-chart-pie"></i></div>
+            <h5>Power BI Dashboards</h5>
+            <p>Professional Power BI solutions featuring complex DAX measures, star-schema data modeling, and secure live data connections.</p>
+            <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
+              <li><strong style="color:#fff;">Impact:</strong> Real-time KPI tracking</li>
+              <li><strong style="color:#fff;">Outcome:</strong> Executive-level clarity</li>
+            </ul>
+            <div class="tag-row"><span class="tag tag-y">DAX</span><span class="tag tag-y">Data Modelling</span><span class="tag tag-y">Live Reports</span></div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d3">
+          <div class="glass svc-card blue-hover">
+            <div class="svc-icon svc-tab"><i class="fas fa-chart-bar"></i></div>
+            <h5>Tableau Visualizations</h5>
+            <p>Stunning, highly interactive Tableau storyboards leveraging advanced LOD expressions and data blending to uncover hidden trends.</p>
+            <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
+              <li><strong style="color:#fff;">Impact:</strong> Deep visual storytelling</li>
+              <li><strong style="color:#fff;">Outcome:</strong> Data-driven strategy alignment</li>
+            </ul>
+            <div class="tag-row"><span class="tag" style="border:1px solid rgba(233,118,39,.4);color:var(--tab);background:rgba(233,118,39,.1)">LOD Expressions</span><span class="tag" style="border:1px solid rgba(233,118,39,.4);color:var(--tab);background:rgba(233,118,39,.1)">Storyboards</span></div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d2">
+          <div class="glass svc-card">
+            <div class="svc-icon svc-db"><i class="fas fa-database"></i></div>
+            <h5>Cloud Data Pipelines</h5>
+            <p>Writing highly optimized SQL queries and architecting robust ETL pipelines connecting APIs to cloud warehouses (AWS, Snowflake).</p>
+            <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
+              <li><strong style="color:#fff;">Impact:</strong> Centralized source of truth</li>
+              <li><strong style="color:#fff;">Outcome:</strong> Instant data availability</li>
+            </ul>
+            <div class="tag-row"><span class="tag tag-p">Snowflake</span><span class="tag tag-p">BigQuery</span><span class="tag tag-p">AWS</span></div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d3">
+          <div class="glass svc-card pink-hover">
+            <div class="svc-icon svc-py"><i class="fab fa-python"></i></div>
+            <h5>Python Data Engineering</h5>
+            <p>Utilizing Python (Pandas/NumPy) to scrape, clean, process, and merge massive multi-million row datasets that crash Excel.</p>
+            <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
+              <li><strong style="color:#fff;">Impact:</strong> Infinite scalability</li>
+              <li><strong style="color:#fff;">Outcome:</strong> Automate complex workflows</li>
+            </ul>
+            <div class="tag-row"><span class="tag tag-b">Pandas</span><span class="tag tag-b">NumPy</span><span class="tag tag-b">ETL</span></div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d4">
+          <div class="glass svc-card blue-hover">
+            <div class="svc-icon svc-ml" style="background:rgba(255,51,102,.15);border:1px solid rgba(255,51,102,.4);color:var(--pink)"><i class="fas fa-brain"></i></div>
+            <h5>Predictive Analytics</h5>
+            <p>Applying advanced statistical modeling to historical data to forecast trends, identify anomalies, and recommend strategic actions.</p>
+            <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
+              <li><strong style="color:#fff;">Impact:</strong> Anticipate market shifts</li>
+              <li><strong style="color:#fff;">Outcome:</strong> Proactive vs Reactive management</li>
+            </ul>
+            <div class="tag-row"><span class="tag tag-pink">Forecasting</span><span class="tag tag-pink">Predictive Models</span><span class="tag tag-pink">Insights</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ TECHNOLOGIES (WITH PNGS & DESCRIPTIONS) ════════════════════ -->
+  <section id="tools" class="sec-pad">
+    <div class="container">
+      <div class="text-center mb-5 anim-el fade-up">
+        <span class="sec-tag">The Tech Stack</span>
+        <h2 class="sec-title">Tools of the <span class="grad-b">Trade</span></h2>
+        <p class="sec-sub mx-auto">I utilize the industry's most powerful, enterprise-grade technologies to process your data efficiently and accurately.</p>
+      </div>
+      <div class="row g-4 align-items-stretch justify-content-center">
+        <!-- Excel -->
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d1">
+          <div class="glass tool-card">
+            <img class="tool-logo-img" src="https://img.icons8.com/color/96/000000/ms-excel.png" alt="Microsoft Excel">
+            <h6 style="color:#fff;font-weight:800;">MS Excel</h6>
+            <p class="tool-desc">Used for rapid data prototyping, financial modeling, dynamic pivot tables, VBA automation, and Power Query data cleaning.</p>
+          </div>
+        </div>
+        <!-- Power BI -->
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d2">
+          <div class="glass tool-card" style="border-color: rgba(242, 200, 17, 0.3);">
+            <img class="tool-logo-img" src="https://img.icons8.com/color/96/000000/power-bi.png" alt="Power BI">
+            <h6 style="color:#fff;font-weight:800;">Power BI</h6>
+            <p class="tool-desc">My primary tool for building interactive, live executive scorecards. Used for complex DAX modeling and enterprise deployment.</p>
+          </div>
+        </div>
+        <!-- Tableau -->
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d3">
+          <div class="glass tool-card" style="border-color: rgba(233, 118, 39, 0.3);">
+            <img class="tool-logo-img" src="https://img.icons8.com/color/96/000000/tableau-software.png" alt="Tableau">
+            <h6 style="color:#fff;font-weight:800;">Tableau</h6>
+            <p class="tool-desc">Leveraged for visually stunning, highly customized storytelling dashboards, leveraging advanced LOD expressions and maps.</p>
+          </div>
+        </div>
+        <!-- Python -->
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d4">
+          <div class="glass tool-card" style="border-color: rgba(55, 118, 171, 0.3);">
+            <img class="tool-logo-img" src="https://img.icons8.com/color/96/000000/python.png" alt="Python">
+            <h6 style="color:#fff;font-weight:800;">Python</h6>
+            <p class="tool-desc">Utilized (Pandas/NumPy) for heavy-lifting data processing, scraping, API integrations, and predictive statistical modeling.</p>
+          </div>
+        </div>
+        <!-- SQL -->
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d5">
+          <div class="glass tool-card" style="border-color: rgba(0, 122, 204, 0.3);">
+            <img class="tool-logo-img" src="https://img.icons8.com/color/96/000000/sql.png" alt="SQL Server">
+            <h6 style="color:#fff;font-weight:800;">SQL Server</h6>
+            <p class="tool-desc">Used as the backbone of data architecture. I write highly optimized queries, stored procedures, and construct robust data pipelines.</p>
+          </div>
+        </div>
+        <!-- Cloud (AWS) -->
+        <div class="col-lg-4 col-md-6 anim-el zoom-in d6">
+          <div class="glass tool-card" style="border-color: rgba(255, 153, 0, 0.3);">
+            <img class="tool-logo-img" src="https://img.icons8.com/color/96/000000/amazon-web-services.png" alt="AWS Cloud">
+            <h6 style="color:#fff;font-weight:800;">Cloud Data</h6>
+            <p class="tool-desc">Used to extract, load, and manage massive datasets directly from modern cloud data warehouses like AWS, Snowflake, and BigQuery.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ DASHBOARD GALLERY ════════════ -->
+  <section id="dashboards" class="sec-pad">
+    <div class="container mb-5 anim-el fade-up">
+      <span class="sec-tag">Analytical Capabilities</span>
+      <h2 class="sec-title">Dashboards Across <span class="grad-b">Every Function</span></h2>
+      <p class="sec-sub">I build specialized, high-performance dashboards tailored to specific business functions, ensuring every department has the exact metrics they need.</p>
+    </div>
+    
+    <div class="dash-gallery-track anim-el fade-up d2">
+      <!-- Base Set -->
+      <div class="dash-item">
+        <div class="dash-img-mock">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
+            <div style="width: 30%; height: 8px; background: var(--purple); border-radius: 4px;"></div>
+          </div>
+          <div style="display:flex; gap: 10px; margin-bottom: 15px;">
+            <div style="flex:1; height: 40px; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+            <div style="flex:1; height: 40px; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+            <div style="flex:1; height: 40px; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+          </div>
+          <div style="flex:1; background: rgba(255,255,255,0.03); border-radius: 6px; display: flex; align-items: flex-end; padding: 10px; gap: 5px;">
+            <div style="flex:1; height: 40%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 60%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 30%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 80%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 50%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 90%; background: var(--pink); border-radius: 3px 3px 0 0;"></div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <h6><i class="fas fa-chart-line" style="color:var(--purple); margin-right: 8px;"></i>Sales & Revenue</h6>
+          <p>Pipeline tracking, territory performance, churn analysis, and sales forecasting.</p>
+        </div>
+      </div>
+      <div class="dash-item">
+        <div class="dash-img-mock">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
+            <div style="width: 40%; height: 8px; background: var(--green); border-radius: 4px;"></div>
+          </div>
+          <div style="display:flex; gap: 10px; height: 100%;">
+            <div style="flex:2; background: rgba(255,255,255,0.03); border-radius: 6px; position: relative;">
+               <svg viewBox="0 0 100 100" style="position:absolute; top:20px; left:20px; width:60%; height:60%;">
+                 <circle cx="50" cy="50" r="40" fill="none" stroke="var(--green)" stroke-width="15" stroke-dasharray="180 200"/>
+                 <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="15" stroke-dasharray="70 200" stroke-dashoffset="-180"/>
+               </svg>
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+              <div style="flex:1; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+              <div style="flex:1; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+              <div style="flex:1; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <h6><i class="fas fa-coins" style="color:var(--green); margin-right: 8px;"></i>Financial P&L</h6>
+          <p>Budget vs Actuals, cashflow statements, expense breakdowns, and profit margins.</p>
+        </div>
+      </div>
+      <div class="dash-item">
+        <div class="dash-img-mock">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
+            <div style="width: 35%; height: 8px; background: var(--accent); border-radius: 4px;"></div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap: 10px; height: 100%;">
+             <div style="height: 30%; background: rgba(255,255,255,0.03); border-radius: 6px; display:flex; align-items:center; padding: 0 10px;">
+               <div style="width: 80%; height: 4px; background: var(--accent);"></div>
+             </div>
+             <div style="height: 30%; background: rgba(255,255,255,0.03); border-radius: 6px; display:flex; align-items:center; padding: 0 10px;">
+               <div style="width: 60%; height: 4px; background: var(--pink);"></div>
+             </div>
+             <div style="height: 30%; background: rgba(255,255,255,0.03); border-radius: 6px; display:flex; align-items:center; padding: 0 10px;">
+               <div style="width: 40%; height: 4px; background: var(--purple);"></div>
+             </div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <h6><i class="fas fa-shopping-bag" style="color:var(--accent); margin-right: 8px;"></i>E-Commerce & Retail</h6>
+          <p>Customer LTV, cart abandonment, inventory turnover, and product affinity analysis.</p>
+        </div>
+      </div>
+      <div class="dash-item">
+        <div class="dash-img-mock">
+          <div style="display:flex; gap: 10px; height: 100%;">
+            <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+              <div style="flex:1; background: var(--orange); border-radius: 6px; opacity: 0.8;"></div>
+              <div style="flex:1; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+            </div>
+            <div style="flex:2; background: rgba(255,255,255,0.03); border-radius: 6px; position:relative; overflow:hidden;">
+              <svg viewBox="0 0 100 100" style="position:absolute; bottom:0; left:0; width:100%; height:70%;" preserveAspectRatio="none">
+                <path d="M0,100 L20,60 L40,80 L60,40 L80,50 L100,20 L100,100 Z" fill="rgba(255,140,42,0.3)"/>
+                <path d="M0,100 L20,60 L40,80 L60,40 L80,50 L100,20" fill="none" stroke="var(--orange)" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <h6><i class="fas fa-cogs" style="color:var(--orange); margin-right: 8px;"></i>Operations & Supply Chain</h6>
+          <p>Logistics tracking, supplier performance, SLA compliance, and warehouse efficiency.</p>
+        </div>
+      </div>
+      
+      <!-- Duplicate Set -->
+      <div class="dash-item">
+        <div class="dash-img-mock">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
+            <div style="width: 30%; height: 8px; background: var(--purple); border-radius: 4px;"></div>
+          </div>
+          <div style="display:flex; gap: 10px; margin-bottom: 15px;">
+            <div style="flex:1; height: 40px; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+            <div style="flex:1; height: 40px; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+            <div style="flex:1; height: 40px; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+          </div>
+          <div style="flex:1; background: rgba(255,255,255,0.03); border-radius: 6px; display: flex; align-items: flex-end; padding: 10px; gap: 5px;">
+            <div style="flex:1; height: 40%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 60%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 30%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 80%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 50%; background: var(--purple); border-radius: 3px 3px 0 0;"></div>
+            <div style="flex:1; height: 90%; background: var(--pink); border-radius: 3px 3px 0 0;"></div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <h6><i class="fas fa-chart-line" style="color:var(--purple); margin-right: 8px;"></i>Sales & Revenue</h6>
+          <p>Pipeline tracking, territory performance, churn analysis, and sales forecasting.</p>
+        </div>
+      </div>
+      <div class="dash-item">
+        <div class="dash-img-mock">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
+            <div style="width: 40%; height: 8px; background: var(--green); border-radius: 4px;"></div>
+          </div>
+          <div style="display:flex; gap: 10px; height: 100%;">
+            <div style="flex:2; background: rgba(255,255,255,0.03); border-radius: 6px; position: relative;">
+               <svg viewBox="0 0 100 100" style="position:absolute; top:20px; left:20px; width:60%; height:60%;">
+                 <circle cx="50" cy="50" r="40" fill="none" stroke="var(--green)" stroke-width="15" stroke-dasharray="180 200"/>
+                 <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="15" stroke-dasharray="70 200" stroke-dashoffset="-180"/>
+               </svg>
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+              <div style="flex:1; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+              <div style="flex:1; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+              <div style="flex:1; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <h6><i class="fas fa-coins" style="color:var(--green); margin-right: 8px;"></i>Financial P&L</h6>
+          <p>Budget vs Actuals, cashflow statements, expense breakdowns, and profit margins.</p>
+        </div>
+      </div>
+      <div class="dash-item">
+        <div class="dash-img-mock">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
+            <div style="width: 35%; height: 8px; background: var(--accent); border-radius: 4px;"></div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap: 10px; height: 100%;">
+             <div style="height: 30%; background: rgba(255,255,255,0.03); border-radius: 6px; display:flex; align-items:center; padding: 0 10px;">
+               <div style="width: 80%; height: 4px; background: var(--accent);"></div>
+             </div>
+             <div style="height: 30%; background: rgba(255,255,255,0.03); border-radius: 6px; display:flex; align-items:center; padding: 0 10px;">
+               <div style="width: 60%; height: 4px; background: var(--pink);"></div>
+             </div>
+             <div style="height: 30%; background: rgba(255,255,255,0.03); border-radius: 6px; display:flex; align-items:center; padding: 0 10px;">
+               <div style="width: 40%; height: 4px; background: var(--purple);"></div>
+             </div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <h6><i class="fas fa-shopping-bag" style="color:var(--accent); margin-right: 8px;"></i>E-Commerce & Retail</h6>
+          <p>Customer LTV, cart abandonment, inventory turnover, and product affinity analysis.</p>
+        </div>
+      </div>
+      <div class="dash-item">
+        <div class="dash-img-mock">
+          <div style="display:flex; gap: 10px; height: 100%;">
+            <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+              <div style="flex:1; background: var(--orange); border-radius: 6px; opacity: 0.8;"></div>
+              <div style="flex:1; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+            </div>
+            <div style="flex:2; background: rgba(255,255,255,0.03); border-radius: 6px; position:relative; overflow:hidden;">
+              <svg viewBox="0 0 100 100" style="position:absolute; bottom:0; left:0; width:100%; height:70%;" preserveAspectRatio="none">
+                <path d="M0,100 L20,60 L40,80 L60,40 L80,50 L100,20 L100,100 Z" fill="rgba(255,140,42,0.3)"/>
+                <path d="M0,100 L20,60 L40,80 L60,40 L80,50 L100,20" fill="none" stroke="var(--orange)" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="dash-info">
+          <h6><i class="fas fa-cogs" style="color:var(--orange); margin-right: 8px;"></i>Operations & Supply Chain</h6>
+          <p>Logistics tracking, supplier performance, SLA compliance, and warehouse efficiency.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ SECTORS ══════════════════════ -->
+  <section id="sectors" class="sec-pad">
+    <div class="container">
+      <div class="text-center mb-5 anim-el fade-up">
+        <span class="sec-tag">Industries I Serve</span>
+        <h2 class="sec-title">Data Solutions for <span class="grad-pink">Every Sector</span></h2>
+        <p class="sec-sub mx-auto">Analytical principles apply everywhere. I adapt my technical expertise to your industry's specific KPIs to deliver precise insights.</p>
+      </div>
+      <div class="row g-4 align-items-stretch">
+        <!-- Expanded Industries -->
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d1">
+          <div class="glass sector-card">
+            <span class="sector-icon"><i class="fas fa-cloud"></i></span>
+            <h6>SaaS & Cloud</h6>
+            <p>MRR tracking, churn analytics, cohort retention.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d2">
+          <div class="glass sector-card pink-hover">
+            <span class="sector-icon" style="color:var(--pink);"><i class="fas fa-hospital"></i></span>
+            <h6>Healthcare</h6>
+            <p>Patient outcomes, billing analytics, clinical KPIs.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d3">
+          <div class="glass sector-card">
+            <span class="sector-icon" style="color:var(--accent);"><i class="fas fa-building-columns"></i></span>
+            <h6>Finance & Banking</h6>
+            <p>P&L dashboards, cashflow, budget vs actuals.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d4">
+          <div class="glass sector-card pink-hover">
+            <span class="sector-icon" style="color:var(--orange);"><i class="fas fa-shopping-cart"></i></span>
+            <h6>E-Commerce</h6>
+            <p>Sales funnels, cart abandonment, inventory turnover.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d2">
+          <div class="glass sector-card">
+            <span class="sector-icon" style="color:var(--green);"><i class="fas fa-truck-fast"></i></span>
+            <h6>Logistics</h6>
+            <p>Fleet tracking, delivery times, warehouse utilization.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d3">
+          <div class="glass sector-card pink-hover">
+            <span class="sector-icon" style="color:var(--accent);"><i class="fas fa-house"></i></span>
+            <h6>Real Estate</h6>
+            <p>Property valuations, occupancy rates, ROI forecasting.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d4">
+          <div class="glass sector-card">
+            <span class="sector-icon" style="color:var(--purple);"><i class="fas fa-graduation-cap"></i></span>
+            <h6>Education</h6>
+            <p>Student performance, enrollment tracking, staff efficiency.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d5">
+          <div class="glass sector-card pink-hover">
+            <span class="sector-icon" style="color:var(--pink);"><i class="fas fa-industry"></i></span>
+            <h6>Manufacturing</h6>
+            <p>Production efficiency, OEE metrics, quality control.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d1">
+          <div class="glass sector-card">
+            <span class="sector-icon" style="color:var(--orange);"><i class="fas fa-plane-departure"></i></span>
+            <h6>Travel & Hosp.</h6>
+            <p>Booking trends, revenue management, customer loyalty.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d2">
+          <div class="glass sector-card pink-hover">
+            <span class="sector-icon" style="color:var(--green);"><i class="fas fa-gamepad"></i></span>
+            <h6>Sports & Gaming</h6>
+            <p>Player analytics, engagement metrics, ticket sales.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d3">
+          <div class="glass sector-card">
+            <span class="sector-icon" style="color:var(--accent);"><i class="fas fa-satellite-dish"></i></span>
+            <h6>Telecom</h6>
+            <p>Network latency, ARPU metrics, subscriber churn.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 anim-el flip-up d4">
+          <div class="glass sector-card pink-hover">
+            <span class="sector-icon" style="color:var(--purple);"><i class="fas fa-bullhorn"></i></span>
+            <h6>Digital Marketing</h6>
+            <p>Ad spend ROI, campaign conversions, lead tracking.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ MULTIPLE FULL WIDTH DEMOS ══════════════════════ -->
+  <section id="showcases">
+    <!-- Showcase 1: E-Commerce -->
+    <div class="demo-section-wrapper" style="background:rgba(0,0,0,0.3);">
+      <div class="container-fluid px-2 px-md-4 px-lg-5">
+        <div class="text-center mb-5 anim-el fade-up">
+          <span class="sec-tag">Showcase 1: E-Commerce</span>
+          <h2 class="sec-title">Transforming <span style="color:var(--green);">Retail Data</span> into <span class="grad-p">Growth Dashboards</span></h2>
+          <p class="sec-sub mx-auto">See how millions of chaotic transaction logs are cleaned and automated into a live Global Command Center.</p>
+        </div>
+        
+        <div class="demo-container">
+          <!-- Excel Data -->
+          <div class="row anim-el zoom-in justify-content-center">
+            <div class="col-12">
+              <div class="demo-table-wrap table-ecom">
+                <table class="demo-table">
+                  <thead>
+                    <tr>
+                      <th class="th-ecom">ORDER_ID</th>
+                      <th class="th-ecom">TIMESTAMP (UTC)</th>
+                      <th class="th-ecom">CUSTOMER_ID</th>
+                      <th class="th-ecom">PRODUCT_SKU</th>
+                      <th class="th-ecom">CATEGORY</th>
+                      <th class="th-ecom">QUANTITY</th>
+                      <th class="th-ecom">UNIT_PRICE</th>
+                      <th class="th-ecom">DISCOUNT_%</th>
+                      <th class="th-ecom">TOTAL_REVENUE</th>
+                      <th class="th-ecom">PAYMENT_METHOD</th>
+                      <th class="th-ecom">DELIVERY_STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>ORD-8829-10A</td><td>2024-11-01T08:14:22Z</td><td>CUS-10928</td><td>TECH-LAP-009</td><td>Electronics</td><td>1</td><td>$1,299.00</td><td>10%</td><td class="cell-bold">$1,169.10</td><td>Credit Card</td><td>Delivered</td></tr>
+                    <tr><td>ORD-8829-11B</td><td>2024-11-01T08:17:45Z</td><td>CUS-99212</td><td>APP-MEN-T04</td><td>Apparel</td><td>3</td><td>$45.00</td><td>0%</td><td class="cell-bold">$135.00</td><td>PayPal</td><td>In Transit</td></tr>
+                    <tr><td>ORD-8829-12C</td><td>2024-11-01T08:22:10Z</td><td>CUS-54111</td><td>HOME-FUR-112</td><td>Furniture</td><td>2</td><td>$350.00</td><td>15%</td><td class="cell-bold">$595.00</td><td>Apple Pay</td><td class="cell-down">Delayed</td></tr>
+                    <tr><td>ORD-8829-13D</td><td>2024-11-01T08:29:05Z</td><td>CUS-10928</td><td>TECH-ACC-881</td><td>Accessories</td><td>1</td><td>$89.99</td><td>0%</td><td class="cell-bold">$89.99</td><td>Credit Card</td><td>Processing</td></tr>
+                    <tr><td>ORD-8829-14E</td><td>2024-11-01T08:35:50Z</td><td>CUS-88129</td><td>BEA-SKN-023</td><td>Beauty</td><td>5</td><td>$24.00</td><td>5%</td><td class="cell-bold">$114.00</td><td>Google Pay</td><td>Delivered</td></tr>
+                    <tr><td colspan="11" style="text-align:center; padding: 25px; font-style: italic; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 1px;">+ 1,842,910 more raw transaction rows across 12 regions...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="row anim-el fade-up"><div class="col-12"><div class="transform-arrow arrow-ecom"><i class="fas fa-angles-down"></i></div></div></div>
+
+          <!-- Dashboard -->
+          <div class="row anim-el zoom-in justify-content-center mt-2">
+            <div class="col-12">
+              <div class="full-dashboard dash-ecom">
+                <div class="dash-header">
+                  <div class="dash-title"><i class="fas fa-shopping-cart me-2" style="color:var(--orange);"></i> GLOBAL E-COMMERCE COMMAND CENTER</div>
+                  <div class="dash-filters">
+                    <div class="dash-filter active-ecom">Q4 2024</div><div class="dash-filter">Black Friday</div><div class="dash-filter">Global</div>
+                  </div>
+                </div>
+                
+                <div class="row g-3">
+                  <div class="col-6 col-md-4 col-lg-2"><div class="kpi-b kb-p h-100 d-flex flex-column justify-content-center p-2 p-md-3"><span class="kl" style="font-size:0.75rem; margin-bottom: 2px;">Gross Revenue</span><span class="kv" style="font-size:clamp(1.1rem, 1.4vw, 1.6rem);">$1.24M</span><span class="kl" style="color:var(--green); font-weight: 700; margin-top: 2px;"><i class="fas fa-arrow-trend-up"></i> +18.2%</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2"><div class="kpi-b kb-pink h-100 d-flex flex-column justify-content-center p-2 p-md-3"><span class="kl" style="font-size:0.75rem; margin-bottom: 2px;">Total Orders</span><span class="kv" style="font-size:clamp(1.1rem, 1.4vw, 1.6rem);">14,892</span><span class="kl" style="color:var(--green); font-weight: 700; margin-top: 2px;"><i class="fas fa-arrow-trend-up"></i> +12.4%</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2"><div class="kpi-b kb-b h-100 d-flex flex-column justify-content-center p-2 p-md-3"><span class="kl" style="font-size:0.75rem; margin-bottom: 2px;">Avg Order Value</span><span class="kv" style="font-size:clamp(1.1rem, 1.4vw, 1.6rem);">$83.50</span><span class="kl" style="color:#ff6b6b; font-weight: 700; margin-top: 2px;"><i class="fas fa-arrow-trend-down"></i> -2.1%</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2"><div class="kpi-b h-100 d-flex flex-column justify-content-center p-2 p-md-3" style="border-color: rgba(27,222,122,0.4); background: rgba(27,222,122,0.1);"><span class="kl" style="font-size:0.75rem; margin-bottom: 2px;">Conversion Rate</span><span class="kv" style="font-size:clamp(1.1rem, 1.4vw, 1.6rem); color: var(--green);">3.84%</span><span class="kl" style="color:var(--green); font-weight: 700; margin-top: 2px;"><i class="fas fa-arrow-trend-up"></i> +0.4%</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2"><div class="kpi-b h-100 d-flex flex-column justify-content-center p-2 p-md-3" style="border-color: rgba(255,140,42,0.4); background: rgba(255,140,42,0.1);"><span class="kl" style="font-size:0.75rem; margin-bottom: 2px;">Cart Abandonment</span><span class="kv" style="font-size:clamp(1.1rem, 1.4vw, 1.6rem); color: var(--orange);">62.1%</span><span class="kl" style="color:#ff6b6b; font-weight: 700; margin-top: 2px;"><i class="fas fa-arrow-trend-up"></i> +1.2%</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2"><div class="kpi-b h-100 d-flex flex-column justify-content-center p-2 p-md-3" style="border-color: rgba(233,118,39,0.4); background: rgba(233,118,39,0.1);"><span class="kl" style="font-size:0.75rem; margin-bottom: 2px;">Customer LTV</span><span class="kv" style="font-size:clamp(1.1rem, 1.4vw, 1.6rem); color: var(--tab);">$412</span><span class="kl" style="color:var(--green); font-weight: 700; margin-top: 2px;"><i class="fas fa-arrow-trend-up"></i> +8.5%</span></div></div>
+
+                  <div class="col-lg-8">
+                    <div class="chart-box h-100 p-3">
+                      <div class="chart-lbl" style="font-size:0.8rem; margin-bottom: 10px;">DAILY REVENUE TREND</div>
+                      <svg viewBox="0 0 800 200" style="width:100%; height: 180px;" preserveAspectRatio="none">
+                        <line x1="0" y1="40" x2="800" y2="40" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                        <line x1="0" y1="120" x2="800" y2="120" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                        <defs><linearGradient id="ecomRev" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9b51e0" stop-opacity=".5"/><stop offset="100%" stop-color="#9b51e0" stop-opacity="0"/></linearGradient></defs>
+                        <path d="M0,170 L80,165 L160,150 L240,160 L320,130 L400,120 L480,135 L560,90 L640,40 L720,60 L800,30 L800,200 L0,200Z" fill="url(#ecomRev)"/>
+                        <path d="M0,170 L80,165 L160,150 L240,160 L320,130 L400,120 L480,135 L560,90 L640,40 L720,60 L800,30" fill="none" stroke="#9b51e0" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="640" cy="40" r="5" fill="#ff3366"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="chart-box h-100 p-3 d-flex flex-column justify-content-center">
+                      <div class="chart-lbl" style="font-size:0.7rem; margin-bottom: 10px;">SALES FUNNEL DROP-OFF</div>
+                      <svg viewBox="0 0 200 110" style="width:100%; height:100px;">
+                        <path d="M10,10 L190,10 L170,30 L30,30 Z" fill="rgba(0,212,255,0.8)"/><text x="100" y="24" fill="#fff" font-size="10" font-family="Plus Jakarta Sans" font-weight="700" text-anchor="middle">Visits (100k)</text>
+                        <path d="M35,35 L165,35 L140,65 L60,65 Z" fill="rgba(155,81,224,0.8)"/><text x="100" y="54" fill="#fff" font-size="10" font-family="Plus Jakarta Sans" font-weight="700" text-anchor="middle">Added to Cart (35k)</text>
+                        <path d="M65,70 L135,70 L115,100 L85,100 Z" fill="rgba(255,51,102,0.8)"/><text x="100" y="89" fill="#fff" font-size="10" font-family="Plus Jakarta Sans" font-weight="700" text-anchor="middle">Purchases (3.8k)</text>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Showcase 2: Digital Marketing -->
+    <div class="demo-section-wrapper" style="background:rgba(0,212,255,0.02);">
+      <div class="container-fluid px-2 px-md-4 px-lg-5">
+        <div class="text-center mb-5 anim-el fade-up">
+          <span class="sec-tag">Showcase 2: Digital Marketing</span>
+          <h2 class="sec-title">From <span style="color:var(--accent);">Ad Spend Spreadsheets</span> to <span class="grad-b">ROI Analytics</span></h2>
+          <p class="sec-sub mx-auto">Tracking multi-channel marketing campaigns to calculate exact Cost Per Acquisition and Return on Ad Spend.</p>
+        </div>
+        
+        <div class="demo-container">
+          <!-- Excel Data -->
+          <div class="row anim-el zoom-in justify-content-center">
+            <div class="col-12">
+              <div class="demo-table-wrap table-mktg">
+                <table class="demo-table">
+                  <thead>
+                    <tr>
+                      <th class="th-mktg">DATE</th>
+                      <th class="th-mktg">CAMPAIGN_NAME</th>
+                      <th class="th-mktg">PLATFORM</th>
+                      <th class="th-mktg">IMPRESSIONS</th>
+                      <th class="th-mktg">CLICKS</th>
+                      <th class="th-mktg">CTR_%</th>
+                      <th class="th-mktg">AD_SPEND</th>
+                      <th class="th-mktg">CONVERSIONS</th>
+                      <th class="th-mktg">COST_PER_ACQ</th>
+                      <th class="th-mktg">REVENUE_GENERATED</th>
+                      <th class="th-mktg">ROAS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>2024-10-15</td><td>Fall_Promo_V1</td><td>Google Ads</td><td>145,200</td><td>4,120</td><td>2.83%</td><td>$2,500.00</td><td>185</td><td>$13.51</td><td class="cell-bold">$9,250.00</td><td class="cell-up">3.7x</td></tr>
+                    <tr><td>2024-10-15</td><td>Retargeting_AudA</td><td>Meta Ads</td><td>85,100</td><td>3,840</td><td>4.51%</td><td>$1,800.00</td><td>210</td><td class="cell-green">$8.57</td><td class="cell-bold">$10,500.00</td><td class="cell-up">5.8x</td></tr>
+                    <tr><td>2024-10-15</td><td>GenZ_Launch</td><td>TikTok Ads</td><td>420,500</td><td>12,500</td><td>2.97%</td><td>$4,200.00</td><td>95</td><td class="cell-down">$44.21</td><td class="cell-bold">$3,800.00</td><td class="cell-down">0.9x</td></tr>
+                    <tr><td>2024-10-16</td><td>Fall_Promo_V2</td><td>Google Ads</td><td>160,000</td><td>5,200</td><td>3.25%</td><td>$2,800.00</td><td>220</td><td>$12.72</td><td class="cell-bold">$11,000.00</td><td class="cell-up">3.9x</td></tr>
+                    <tr><td>2024-10-16</td><td>B2B_LeadGen</td><td>LinkedIn Ads</td><td>45,000</td><td>850</td><td>1.88%</td><td>$3,500.00</td><td>42</td><td>$83.33</td><td class="cell-bold">$18,500.00</td><td class="cell-up">5.2x</td></tr>
+                    <tr><td colspan="11" style="text-align:center; padding: 25px; font-style: italic; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 1px;">+ 45,210 more campaign log rows tracking daily spend...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="row anim-el fade-up"><div class="col-12"><div class="transform-arrow arrow-mktg"><i class="fas fa-angles-down"></i></div></div></div>
+
+          <!-- Dashboard -->
+          <div class="row anim-el zoom-in justify-content-center mt-2">
+            <div class="col-12">
+              <div class="full-dashboard dash-mktg">
+                <div class="dash-header">
+                  <div class="dash-title"><i class="fas fa-bullhorn me-2" style="color:var(--accent);"></i> MARKETING ROI DASHBOARD</div>
+                  <div class="dash-filters">
+                    <div class="dash-filter active-mktg">Last 30 Days</div><div class="dash-filter">All Platforms</div>
+                  </div>
+                </div>
+                
+                <div class="row g-3">
+                  <div class="col-6 col-md-3"><div class="kpi-b kb-b h-100 p-3"><span class="kl">Total Ad Spend</span><span class="kv">$45,200</span></div></div>
+                  <div class="col-6 col-md-3"><div class="kpi-b h-100 p-3" style="border-color: rgba(27,222,122,0.4); background: rgba(27,222,122,0.1);"><span class="kl">Total Revenue</span><span class="kv" style="color:var(--green);">$185,400</span></div></div>
+                  <div class="col-6 col-md-3"><div class="kpi-b kb-pink h-100 p-3"><span class="kl">Avg CPA</span><span class="kv">$14.50</span></div></div>
+                  <div class="col-6 col-md-3"><div class="kpi-b kb-p h-100 p-3"><span class="kl">Blended ROAS</span><span class="kv">4.1x</span></div></div>
+
+                  <div class="col-lg-6">
+                    <div class="chart-box h-100 p-3">
+                      <div class="chart-lbl">SPEND VS REVENUE TREND</div>
+                      <svg viewBox="0 0 400 150" style="width:100%; height: 130px;" preserveAspectRatio="none">
+                        <path d="M0,130 L50,120 L100,125 L150,110 L200,115 L250,100 L300,105 L350,90 L400,95" fill="none" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M0,100 L50,80 L100,85 L150,60 L200,65 L250,40 L300,45 L350,20 L400,25" fill="none" stroke="#1bde7a" stroke-width="3" stroke-linecap="round"/>
+                        <text x="350" y="15" fill="#1bde7a" font-size="10" font-family="Plus Jakarta Sans">Revenue</text>
+                        <text x="350" y="85" fill="#00d4ff" font-size="10" font-family="Plus Jakarta Sans">Spend</text>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="chart-box h-100 p-3">
+                      <div class="chart-lbl">ROAS BY PLATFORM</div>
+                      <div style="margin-top:15px;">
+                        <div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text);margin-bottom:4px;font-weight:600;"><span>Meta Ads (5.8x)</span></div><div style="height:8px;background:rgba(255,255,255,.07);border-radius:50px;"><div style="width:85%; background:var(--green); height:100%; border-radius:50px;"></div></div></div>
+                        <div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text);margin-bottom:4px;font-weight:600;"><span>Google Ads (3.8x)</span></div><div style="height:8px;background:rgba(255,255,255,.07);border-radius:50px;"><div style="width:60%; background:var(--accent); height:100%; border-radius:50px;"></div></div></div>
+                        <div><div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text);margin-bottom:4px;font-weight:600;"><span>TikTok Ads (0.9x)</span></div><div style="height:8px;background:rgba(255,255,255,.07);border-radius:50px;"><div style="width:20%; background:#ff3366; height:100%; border-radius:50px;"></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Showcase 3: Healthcare -->
+    <div class="demo-section-wrapper" style="background:rgba(255,51,102,0.02);">
+      <div class="container-fluid px-2 px-md-4 px-lg-5">
+        <div class="text-center mb-5 anim-el fade-up">
+          <span class="sec-tag">Showcase 3: Healthcare Operations</span>
+          <h2 class="sec-title">From <span style="color:var(--pink);">Patient Admission Logs</span> to <span class="grad-p">Clinical Efficiency</span></h2>
+          <p class="sec-sub mx-auto">Tracking ER wait times, bed occupancy, and staff utilization to improve patient outcomes and operational flow.</p>
+        </div>
+        
+        <div class="demo-container">
+          <!-- Excel Data -->
+          <div class="row anim-el zoom-in justify-content-center">
+            <div class="col-12">
+              <div class="demo-table-wrap table-hlth">
+                <table class="demo-table">
+                  <thead>
+                    <tr>
+                      <th class="th-hlth">DATE_TIME</th>
+                      <th class="th-hlth">PATIENT_ID</th>
+                      <th class="th-hlth">DEPARTMENT</th>
+                      <th class="th-hlth">TRIAGE_LEVEL</th>
+                      <th class="th-hlth">TIME_TO_TRIAGE (MIN)</th>
+                      <th class="th-hlth">TIME_TO_PHYSICIAN (MIN)</th>
+                      <th class="th-hlth">TOTAL_LOS (HOURS)</th>
+                      <th class="th-hlth">DISCHARGE_STATUS</th>
+                      <th class="th-hlth">READMISSION_30D</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>2024-11-02 08:15</td><td>PT-90112</td><td>Emergency</td><td>Level 2 (Emergent)</td><td>4</td><td class="cell-down">45</td><td>8.5</td><td>Admitted</td><td>No</td></tr>
+                    <tr><td>2024-11-02 08:30</td><td>PT-88123</td><td>Cardiology</td><td>Level 3 (Urgent)</td><td>12</td><td>25</td><td>3.2</td><td>Discharged Home</td><td>No</td></tr>
+                    <tr><td>2024-11-02 09:05</td><td>PT-77144</td><td>Emergency</td><td>Level 1 (Resuscitation)</td><td>0</td><td>2</td><td>48.0</td><td>Admitted - ICU</td><td>Yes</td></tr>
+                    <tr><td>2024-11-02 09:45</td><td>PT-66122</td><td>Orthopedics</td><td>Level 4 (Less Urgent)</td><td>22</td><td class="cell-down">85</td><td>2.5</td><td>Discharged Home</td><td>No</td></tr>
+                    <tr><td>2024-11-02 10:10</td><td>PT-55199</td><td>Pediatrics</td><td>Level 3 (Urgent)</td><td>8</td><td>15</td><td>4.0</td><td>Admitted - Floor</td><td>No</td></tr>
+                    <tr><td colspan="9" style="text-align:center; padding: 25px; font-style: italic; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 1px;">+ 312,400 more patient interaction logs across 5 hospital branches...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="row anim-el fade-up"><div class="col-12"><div class="transform-arrow arrow-hlth"><i class="fas fa-angles-down"></i></div></div></div>
+
+          <!-- Dashboard -->
+          <div class="row anim-el zoom-in justify-content-center mt-2">
+            <div class="col-12">
+              <div class="full-dashboard dash-hlth">
+                <div class="dash-header">
+                  <div class="dash-title"><i class="fas fa-hospital-user me-2" style="color:var(--pink);"></i> CLINICAL OPERATIONS DASHBOARD</div>
+                  <div class="dash-filters">
+                    <div class="dash-filter active-hlth">Today (Live)</div><div class="dash-filter">Main Campus</div>
+                  </div>
+                </div>
+                
+                <div class="row g-3">
+                  <div class="col-6 col-md-3"><div class="kpi-b kb-pink h-100 p-3"><span class="kl">Current ER Wait Time</span><span class="kv">42 Mins</span><span class="kl" style="color:#ff6b6b;"><i class="fas fa-arrow-trend-up"></i> +12m target</span></div></div>
+                  <div class="col-6 col-md-3"><div class="kpi-b kb-p h-100 p-3"><span class="kl">Total Bed Occupancy</span><span class="kv">88%</span><span class="kl" style="color:var(--green);"><i class="fas fa-arrow-trend-down"></i> Safe Zone</span></div></div>
+                  <div class="col-6 col-md-3"><div class="kpi-b kb-b h-100 p-3"><span class="kl">Avg Length of Stay</span><span class="kv">4.2 Days</span></div></div>
+                  <div class="col-6 col-md-3"><div class="kpi-b kb-g h-100 p-3"><span class="kl">30-Day Readmission</span><span class="kv">11.4%</span></div></div>
+
+                  <div class="col-lg-12">
+                    <div class="chart-box h-100 p-3">
+                      <div class="chart-lbl">ER PATIENT INFLOW VS WAIT TIMES (LAST 24H)</div>
+                      <svg viewBox="0 0 800 150" style="width:100%; height: 120px;" preserveAspectRatio="none">
+                        <!-- Bars (Patient Volume) -->
+                        <rect x="50" y="80" width="30" height="70" fill="rgba(255,51,102,0.2)"/>
+                        <rect x="150" y="60" width="30" height="90" fill="rgba(255,51,102,0.3)"/>
+                        <rect x="250" y="40" width="30" height="110" fill="rgba(255,51,102,0.5)"/>
+                        <rect x="350" y="20" width="30" height="130" fill="rgba(255,51,102,0.8)"/>
+                        <rect x="450" y="50" width="30" height="100" fill="rgba(255,51,102,0.4)"/>
+                        <rect x="550" y="70" width="30" height="80" fill="rgba(255,51,102,0.2)"/>
+                        <rect x="650" y="90" width="30" height="60" fill="rgba(255,51,102,0.1)"/>
+                        
+                        <!-- Line (Wait Time) -->
+                        <path d="M65,100 L165,85 L265,50 L365,20 L465,60 L565,95 L665,110" fill="none" stroke="#00d4ff" stroke-width="4" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ TESTIMONIALS SLIDING GALLERY ════════════════════ -->
+  <section id="testimonials" class="sec-pad">
+    <div class="container mb-5">
+      <div class="text-center anim-el fade-up">
+        <span class="sec-tag">Client Success</span>
+        <h2 class="sec-title">What My Clients <span class="grad-b">Say</span></h2>
+      </div>
+    </div>
+    
+    <div class="test-gallery-track anim-el fade-up d2">
+      <!-- Base Set -->
+      <div class="glass tcard">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="ttext">"Nikhil completely overhauled our reporting. What used to take our team 3 days at the end of every month is now instantly available on a live Power BI dashboard. Exceptional ROI."</p>
+        <div style="color: #fff; font-weight: 800;">Director of Finance</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">E-Commerce Brand, USA</div>
+      </div>
+      <div class="glass tcard">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="ttext">"The automated pipeline he built connecting our databases saved us hiring a full-time analyst. The insights are clear, accurate, and visually stunning. Highly recommend."</p>
+        <div style="color: #fff; font-weight: 800;">Operations Manager</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">Logistics Firm, UK</div>
+      </div>
+      <div class="glass tcard">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="ttext">"Incredible Tableau skills. We had fragmented data across 4 different platforms and Nikhil brought it all together into a beautiful, easy-to-read executive storyboard."</p>
+        <div style="color: #fff; font-weight: 800;">Marketing VP</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">SaaS Company, Canada</div>
+      </div>
+      <div class="glass tcard">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="ttext">"Nikhil's predictive analytics models helped us identify customer churn before it happened. This data-driven approach directly increased our retention rate by 15%."</p>
+        <div style="color: #fff; font-weight: 800;">CEO</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">Tech Startup, Australia</div>
+      </div>
+      <!-- Duplicate Set for infinite scroll -->
+      <div class="glass tcard">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="ttext">"Nikhil completely overhauled our reporting. What used to take our team 3 days at the end of every month is now instantly available on a live Power BI dashboard. Exceptional ROI."</p>
+        <div style="color: #fff; font-weight: 800;">Director of Finance</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">E-Commerce Brand, USA</div>
+      </div>
+      <div class="glass tcard">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="ttext">"The automated pipeline he built connecting our databases saved us hiring a full-time analyst. The insights are clear, accurate, and visually stunning. Highly recommend."</p>
+        <div style="color: #fff; font-weight: 800;">Operations Manager</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">Logistics Firm, UK</div>
+      </div>
+      <div class="glass tcard">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="ttext">"Incredible Tableau skills. We had fragmented data across 4 different platforms and Nikhil brought it all together into a beautiful, easy-to-read executive storyboard."</p>
+        <div style="color: #fff; font-weight: 800;">Marketing VP</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">SaaS Company, Canada</div>
+      </div>
+      <div class="glass tcard">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="ttext">"Nikhil's predictive analytics models helped us identify customer churn before it happened. This data-driven approach directly increased our retention rate by 15%."</p>
+        <div style="color: #fff; font-weight: 800;">CEO</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">Tech Startup, Australia</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ MY PROVEN PROCESS ══════════════════════ -->
+  <section id="process" class="sec-pad">
+    <div class="ambient-glow" style="top: 50%; left: 10%;"></div>
+    <div class="container">
+      <div class="text-center mb-5 anim-el fade-up">
+        <span class="sec-tag">How I Work</span>
+        <h2 class="sec-title">My Proven <span class="grad-p">4-Step Process</span></h2>
+        <p class="sec-sub mx-auto">From messy fragmented data to a live boardroom dashboard in weeks, not months. A seamless, transparent workflow designed for business owners.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-item tl-left anim-el slide-right d1">
+          <div class="glass tl-content">
+            <div class="tl-num">1</div>
+            <h5>Discovery & Audit</h5>
+            <p>We start with a deep dive into your business goals. I audit your current spreadsheets, databases, and APIs to identify exactly where your data lives and what KPIs matter most for your growth.</p>
+          </div>
+        </div>
+        <div class="tl-item tl-right anim-el slide-left d2">
+          <div class="glass tl-content">
+            <div class="tl-num" style="background: linear-gradient(135deg, var(--accent), #0077cc);">2</div>
+            <h5>Data Engineering</h5>
+            <p>I clean, transform, and model your messy data. Whether writing Python scripts or SQL procedures, I build an automated, error-free pipeline that acts as your single source of truth.</p>
+          </div>
+        </div>
+        <div class="tl-item tl-left anim-el slide-right d3">
+          <div class="glass tl-content">
+            <div class="tl-num" style="background: linear-gradient(135deg, var(--pink), var(--purple));">3</div>
+            <h5>Dashboard Architecture</h5>
+            <p>I design premium, highly intuitive Power BI or Tableau dashboards. Complex DAX measures are written to ensure every metric is filterable, accurate, and visually stunning.</p>
+          </div>
+        </div>
+        <div class="tl-item tl-right anim-el slide-left d4">
+          <div class="glass tl-content">
+            <div class="tl-num" style="background: linear-gradient(135deg, var(--green), #128c7e);">4</div>
+            <h5>Deployment & Training</h5>
+            <p>Your dashboards go live. I set up automated daily refreshes and role-level security. Finally, I provide recorded training so your team knows exactly how to extract insights instantly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FAQ ══════════════════════ -->
+  <section id="faq" class="sec-pad">
+    <div class="container">
+      <div class="text-center mb-5 anim-el fade-up">
+        <span class="sec-tag">Got Questions?</span>
+        <h2 class="sec-title">Frequently Asked <span class="grad-b">Questions</span></h2>
+      </div>
+
+      <div class="faq-wrapper anim-el fade-up d2">
+        <div class="faq-item">
+          <button class="faq-q">Do you sign NDAs to protect our data?<i class="fas fa-chevron-down"></i></button>
+          <div class="faq-a">Absolutely. Client confidentiality is my highest priority. I am happy to sign Non-Disclosure Agreements (NDAs) before we even look at a single row of your data. All work is done within secure, compliant environments.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How long does a typical dashboard project take?<i class="fas fa-chevron-down"></i></button>
+          <div class="faq-a">Most standard Power BI or Tableau dashboards take between 2 to 4 weeks from discovery to final deployment. Highly complex enterprise data warehouse integrations may take longer, but I always provide a strict timeline upfront.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Our data is a complete mess. Can you still help?<i class="fas fa-chevron-down"></i></button>
+          <div class="faq-a">Yes! "Messy data" is the norm, not the exception. A large part of my process is Data Engineering—using tools like Python, SQL, and Power Query to clean, standardize, and format your chaotic data into a usable structure.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do you provide ongoing support after delivery?<i class="fas fa-chevron-down"></i></button>
+          <div class="faq-a">Yes. I offer flexible maintenance retainers for clients who need ongoing dashboard adjustments, new data source integrations, or monthly data quality audits. I don't just build and disappear.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CONTACT ═══════════════════════ -->
+  <section id="contact">
+    <div class="contact-bg-glow"></div>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 anim-el zoom-in">
+          <div class="glass contact-card">
+            <h2 class="sec-title mb-4" style="font-size: clamp(2.2rem, 4vw, 3.5rem);">Ready to Unlock Your <span class="grad-p">Data's Potential?</span></h2>
+            <p style="color:var(--muted);font-size:1.15rem;margin-bottom:45px; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.8;">
+              Stop making decisions based on gut feelings and messy spreadsheets. Let's build automated, real-time dashboards that give you total clarity and drive real business growth.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-4">
+              <a href="https://wa.me/918155938672" class="btn-wa" target="_blank"><i class="fab fa-whatsapp" style="font-size:1.3rem;"></i> WhatsApp Chat</a>
+              <a href="mailto:muliyasiyanikhil2000@gmail.com" class="btn-em"><i class="fas fa-envelope" style="font-size:1.2rem;"></i> Send an Email</a>
+              <a href="https://linkedin.com/in/nikhil-muliyasiya" class="btn-li" target="_blank"><i class="fab fa-linkedin" style="font-size:1.2rem;"></i> Connect on LinkedIn</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER ════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start mb-4 mb-md-0">
+          <h4 style="font-weight: 800; color: #fff; margin-bottom: 5px;">Nikhil Analytics</h4>
+          <p style="color: var(--muted); font-size: 0.9rem; margin: 0;">Global Data Analytics & Business Intelligence Solutions</p>
+          <p class="footer-desc">Specializing in building automated data pipelines, interactive executive dashboards, and statistical models that empower businesses to make data-driven decisions seamlessly across the globe.</p>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex justify-content-center justify-content-md-end gap-3">
+            <a href="https://linkedin.com/in/nikhil-muliyasiya" target="_blank" class="footer-icon"><i class="fab fa-linkedin-in"></i></a>
+            <a href="mailto:muliyasiyanikhil2000@gmail.com" class="footer-icon"><i class="fas fa-envelope"></i></a>
+            <a href="https://wa.me/918155938672" target="_blank" class="footer-icon"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-5" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; font-size: 0.8rem; color: var(--muted);">
+        &copy; 2024 Nikhil Analytics. All rights reserved. Providing Data Services Worldwide.
+      </div>
+    </div>
+  </footer>
+
+  <a href="#hero" id="scrollUp"><i class="fas fa-arrow-up"></i></a>
+
+  <script>
+    // Galaxy Stars Particle System
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+
+    const colors = ['rgba(155, 81, 224, 0.9)', 'rgba(255, 51, 102, 0.9)', 'rgba(0, 212, 255, 0.9)', 'rgba(255, 255, 255, 0.7)'];
+
+    function init() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      particles = [];
+      // Massive particle count for galaxy effect
+      let particleCount = window.innerWidth > 768 ? 400 : 150;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Star());
+      }
+    }
+
+    let scrollY = 0;
+    window.addEventListener('scroll', () => {
+      scrollY = window.scrollY;
+    });
+
+    class Star {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        // Slow drift for galaxy feel
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        // Varying sizes
+        this.r = Math.random() * 2.5 + 0.2;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        // Twinkling logic
+        this.alpha = Math.random();
+        this.alphaChange = (Math.random() * 0.02) + 0.005;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Twinkle effect
+        this.alpha += this.alphaChange;
+        if (this.alpha >= 1 || this.alpha <= 0.1) {
+          this.alphaChange *= -1;
+        }
+
+        // Wrap around screen instead of bouncing
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+        if (this.y < 0) this.y = height;
+        if (this.y > height) this.y = 0;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        
+        // Apply twinkle alpha to the color
+        let rgb = this.color.match(/\d+, \d+, \d+/)[0];
+        ctx.fillStyle = `rgba(${rgb}, ${this.alpha})`;
+        
+        // Add glow
+        ctx.shadowBlur = this.r * 4;
+        ctx.shadowColor = `rgba(${rgb}, 1)`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => { p.update(); p.draw() });
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => { init() });
+    init();
+    animate();
+
+    // Intersection Observer for Scroll Animations
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('on');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.anim-el').forEach((el) => {
+      observer.observe(el);
+    });
+
+    // Scroll to top button logic
+    const sUp = document.getElementById('scrollUp');
+    window.addEventListener('scroll', () => {
+      let st = window.scrollY;
+      if (st > 400) sUp.classList.add('show'); else sUp.classList.remove('show');
+    });
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-q').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = button.parentElement;
+        const isActive = item.classList.contains('active');
+        
+        // Close all other items
+        document.querySelectorAll('.faq-item').forEach(faq => {
+          faq.classList.remove('active');
+        });
+
+        // Toggle current item
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
