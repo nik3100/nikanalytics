@@ -41,6 +41,12 @@
       box-sizing: border-box;
     }
 
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
+
     html {
       scroll-behavior: smooth;
     }
@@ -49,7 +55,6 @@
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-body);
-      overflow-x: hidden;
       font-size: 16px;
       line-height: 1.6;
     }
@@ -234,6 +239,12 @@
         border-radius: 12px;
         margin-top: 15px;
         border: 1px solid rgba(155, 81, 224, 0.2);
+      }
+      .navbar-nav .nav-item .btn-hire {
+        display: inline-block;
+        width: auto;
+        margin-top: 10px;
+        text-align: center;
       }
     }
 
@@ -4012,6 +4023,17 @@
         // Toggle current item
         if (!isActive) {
           item.classList.add('active');
+        }
+      });
+    });
+
+    // Auto-close mobile navbar on link click
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+        if (window.getComputedStyle(navbarToggler).display !== 'none' && navbarCollapse.classList.contains('show')) {
+          navbarToggler.click();
         }
       });
     });
