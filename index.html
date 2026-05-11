@@ -1877,7 +1877,7 @@
 
           <div class="d-flex flex-wrap gap-3 mb-5">
             <a href="#contact" class="btn-primary-p"><i class="fas fa-rocket"></i> Start Your Project</a>
-            <a href="#showcases" class="btn-outline-p"><i class="fas fa-chart-line"></i> View Live Dashboards</a>
+            <a href="#showcases" class="btn-outline-p"><i class="fas fa-chart-line"></i>View Excel to Dashboards</a>
           </div>
 
           <div class="d-flex flex-wrap gap-3">
@@ -2105,25 +2105,150 @@
               </div>
             </div>
             <div class="col-12 anim-el fade-up d5">
-              <div class="glass p-5">
+              <div class="glass p-5 position-relative overflow-hidden"
+                style="border: 1px solid rgba(155, 81, 224, 0.3); background: linear-gradient(145deg, rgba(155, 81, 224, 0.05) 0%, rgba(11, 15, 26, 0.4) 100%);">
+                <!-- Decorative Elements -->
                 <div
-                  style="font-size:.85rem;color:var(--purple);font-weight:800;letter-spacing:2px;margin-bottom:15px;">
-                  CORE COMPETENCIES</div>
-                <div style="font-weight:800;color:#fff;font-size:1.2rem;margin-bottom:15px;">Data Analytics | Business
-                  Intelligence | ETL</div>
-                <p style="color:var(--muted);font-size:.95rem;margin-bottom:20px; line-height: 1.7;">
-                  Expert in connecting scattered data sources, modeling complex relationships, writing advanced SQL/DAX
-                  queries, and designing pixel-perfect executive scorecards.
-                </p>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                  <span class="tag tag-p">Power BI DAX</span>
-                  <span class="tag tag-pink">Tableau LOD</span>
-                  <span class="tag tag-b">Advanced SQL</span>
-                  <span class="tag tag-y">Excel VBA</span>
-                  <span class="tag tag-p">Python Pandas</span>
-                  <span class="tag tag-green"
-                    style="border:1px solid rgba(27,222,122,.4);color:var(--green);background:rgba(27,222,122,.1)">Cloud
-                    Data</span>
+                  style="position: absolute; top: -50px; right: -10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(155, 81, 224, 0.15) 0%, transparent 70%); filter: blur(40px); z-index: 0; pointer-events: none;">
+                </div>
+                <div
+                  style="position: absolute; bottom: -50px; left: -10%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); filter: blur(40px); z-index: 0; pointer-events: none;">
+                </div>
+
+                <div class="position-relative" style="z-index: 2;">
+                  <div class="d-flex align-items-center gap-4 mb-4">
+                    <div
+                      style="width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, rgba(155, 81, 224, 0.2), rgba(255, 51, 102, 0.1)); border: 1px solid rgba(155, 81, 224, 0.4); display: flex; align-items: center; justify-content: center; color: var(--purple); font-size: 1.5rem; box-shadow: 0 0 20px rgba(155, 81, 224, 0.2); flex-shrink: 0;">
+                      <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <div>
+                      <div
+                        style="font-size:.8rem;color:var(--pink);font-weight:800;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">
+                        Core Competencies</div>
+                      <div
+                        style="font-weight:800;color:#fff;font-size:1.4rem; letter-spacing: -0.5px; line-height: 1.3;">
+                        Data Analytics <span style="color:var(--muted); font-weight:300; padding: 0 6px;">|</span>
+                        Business Intelligence <span
+                          style="color:var(--muted); font-weight:300; padding: 0 6px;">|</span> ETL</div>
+                    </div>
+                  </div>
+
+                  <p style="color:var(--text);font-size:1.05rem;margin-bottom:32px; line-height: 1.8; max-width: 95%;">
+                    Expert in connecting scattered data sources, modeling complex relationships, writing advanced
+                    SQL/DAX queries, and designing <span
+                      style="color:#fff; font-weight: 700; border-bottom: 2px solid rgba(155, 81, 224, 0.6);">pixel-perfect
+                      executive scorecards</span>.
+                  </p>
+
+                  <style>
+                    .core-skill {
+                      display: inline-flex;
+                      align-items: center;
+                      gap: 10px;
+                      padding: 12px 22px;
+                      border-radius: 14px;
+                      font-size: .85rem;
+                      font-weight: 700;
+                      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                      cursor: default;
+                      backdrop-filter: blur(10px);
+                    }
+
+                    .core-skill i {
+                      font-size: 1.1rem;
+                    }
+
+                    .core-skill:hover {
+                      transform: translateY(-5px) scale(1.03);
+                    }
+
+                    .core-skill.pbi {
+                      border: 1px solid rgba(242, 200, 17, 0.3);
+                      color: var(--pbi);
+                      background: rgba(242, 200, 17, 0.05);
+                    }
+
+                    .core-skill.pbi:hover {
+                      box-shadow: 0 10px 25px rgba(242, 200, 17, 0.2);
+                      border-color: rgba(242, 200, 17, 0.6);
+                      color: #fff;
+                      background: rgba(242, 200, 17, 0.15);
+                    }
+
+                    .core-skill.tab {
+                      border: 1px solid rgba(233, 118, 39, 0.3);
+                      color: var(--tab);
+                      background: rgba(233, 118, 39, 0.05);
+                    }
+
+                    .core-skill.tab:hover {
+                      box-shadow: 0 10px 25px rgba(233, 118, 39, 0.2);
+                      border-color: rgba(233, 118, 39, 0.6);
+                      color: #fff;
+                      background: rgba(233, 118, 39, 0.15);
+                    }
+
+                    .core-skill.sql {
+                      border: 1px solid rgba(0, 212, 255, 0.3);
+                      color: var(--accent);
+                      background: rgba(0, 212, 255, 0.05);
+                    }
+
+                    .core-skill.sql:hover {
+                      box-shadow: 0 10px 25px rgba(0, 212, 255, 0.2);
+                      border-color: rgba(0, 212, 255, 0.6);
+                      color: #fff;
+                      background: rgba(0, 212, 255, 0.15);
+                    }
+
+                    .core-skill.xl {
+                      border: 1px solid rgba(46, 204, 113, 0.3);
+                      color: var(--excel-light);
+                      background: rgba(46, 204, 113, 0.05);
+                    }
+
+                    .core-skill.xl:hover {
+                      box-shadow: 0 10px 25px rgba(46, 204, 113, 0.2);
+                      border-color: rgba(46, 204, 113, 0.6);
+                      color: #fff;
+                      background: rgba(46, 204, 113, 0.15);
+                    }
+
+                    .core-skill.py {
+                      border: 1px solid rgba(255, 212, 59, 0.3);
+                      color: #ffd43b;
+                      background: rgba(255, 212, 59, 0.05);
+                    }
+
+                    .core-skill.py:hover {
+                      box-shadow: 0 10px 25px rgba(255, 212, 59, 0.2);
+                      border-color: rgba(255, 212, 59, 0.6);
+                      color: #fff;
+                      background: rgba(255, 212, 59, 0.15);
+                    }
+
+                    .core-skill.cloud {
+                      border: 1px solid rgba(155, 81, 224, 0.3);
+                      color: var(--purple);
+                      background: rgba(155, 81, 224, 0.05);
+                    }
+
+                    .core-skill.cloud:hover {
+                      box-shadow: 0 10px 25px rgba(155, 81, 224, 0.2);
+                      border-color: rgba(155, 81, 224, 0.6);
+                      color: #fff;
+                      background: rgba(155, 81, 224, 0.15);
+                    }
+                  </style>
+
+                  <div style="display:flex;flex-wrap:wrap;gap:14px;">
+                    <div class="core-skill pbi"><i class="fa-solid fa-chart-line"></i>Power BI</div>
+                    <div class="core-skill tab"><i class="fa-solid fa-layer-group"></i>Tableau</div>
+                    <div class="core-skill sql"><i class="fa-solid fa-database"></i>SQL</div>
+                    <div class="core-skill xl"><i class="fa-solid fa-file-excel"></i>Excel</div>
+                    <div class="core-skill py"><i class="fa-brands fa-python"></i>Python</div>
+                    <div class="core-skill cloud"><i class="fa-solid fa-cloud"></i>Cloud</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2206,7 +2331,7 @@
               of manual data entry.</p>
             <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
               <li><strong style="color:#fff;">Impact:</strong> Save 20+ hours/week</li>
-              <li><strong style="color:#fff;">Outcome:</strong> 100% error-free financial models</li>
+              <li><strong style="color:#fff;">Outcome:</strong> 100% error-free data models</li>
             </ul>
             <div class="tag-row"><span class="tag tag-g">Power Query</span><span class="tag tag-g">VBA
                 Macros</span><span class="tag tag-g">Pivot Tables</span></div>
@@ -2253,7 +2378,7 @@
             <div class="svc-icon" style="background:rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3);">
               <img src="https://img.icons8.com/fluency/96/000000/database.png" style="width: 40px; height: 40px;">
             </div>
-            <h5>Cloud Data Pipelines</h5>
+            <h5>Cloud Databases</h5>
             <p>Writing highly optimized SQL queries and architecting robust ETL pipelines connecting APIs to cloud
               warehouses (AWS, Snowflake).</p>
             <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
@@ -2269,7 +2394,7 @@
             <div class="svc-icon"
               style="background:rgba(55, 118, 171, 0.1); border: 1px solid rgba(55, 118, 171, 0.3);"><img
                 src="https://img.icons8.com/color/96/000000/python.png" style="width: 40px; height: 40px;"></div>
-            <h5>Python Data Engineering</h5>
+            <h5>Python</h5>
             <p>Utilizing Python (Pandas/NumPy) to scrape, clean, process, and merge massive multi-million row datasets
               that crash Excel.</p>
             <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
@@ -2286,7 +2411,7 @@
               style="background:rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.3);"><img
                 src="https://img.icons8.com/fluency/96/000000/artificial-intelligence.png"
                 style="width: 40px; height: 40px;"></div>
-            <h5>Predictive Analytics</h5>
+            <h5>AI/ML Analytics</h5>
             <p>Applying advanced statistical modeling to historical data to forecast trends, identify anomalies, and
               recommend strategic actions.</p>
             <ul style="color:var(--muted); font-size:0.85rem; padding-left: 20px; margin-bottom: 20px;">
